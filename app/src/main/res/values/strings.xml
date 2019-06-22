@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">TicTacToe</string>
+    <string name="playAgain">Play Again !</string>
+    <string name="tryAgain">Try Again !</string>
+    <string name="winnerIs">The Winner is: </string>
+    <string name="startGame">Lets start !!! </string>
+    <string name="Welcome">Welcome to TicTacToe </string>
+</resources>
