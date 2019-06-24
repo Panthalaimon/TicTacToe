@@ -59,13 +59,20 @@ public class MainActivity extends AppCompatActivity {
                     gameStarted = false;
                     if(activePlayer == 1){
                         winnerText ="Player2";
+                        intent.putExtra("winnerIs","The Winner is:");
+                        intent.putExtra("winner",winnerText);
 
                     }else if (activePlayer == 0){
                         winnerText="Player1";
+                        intent.putExtra("winnerIs","The Winner is:");
+                        intent.putExtra("winner",winnerText);
 
-
+                    }else{
+                        winnerText="Draw";
+                        intent.putExtra("noWinner","Try Again!");
+                        intent.putExtra("winner",winnerText);
                     }
-                   intent.putExtra("winner",winnerText);
+
                   startActivity(intent);
                     reset(view);
                 }
