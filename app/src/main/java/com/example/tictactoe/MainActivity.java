@@ -67,14 +67,21 @@ public class MainActivity extends AppCompatActivity {
                         intent.putExtra("winnerIs","The Winner is:");
                         intent.putExtra("winner",winnerText);
 
-                    }else{
-                        winnerText="Draw";
-                        intent.putExtra("noWinner","Try Again!");
-                        intent.putExtra("winner",winnerText);
                     }
 
-                  startActivity(intent);
+                    startActivity(intent);
                     reset(view);
+                }else{
+                    gameStarted = false;
+                    for(int counterState :State){
+                        if(counterState == 2) gameStarted = true;
+                    }
+                    if(!(gameStarted)){
+                        intent.putExtra("winner", "Draw");
+                        startActivity(intent);
+                        reset(view);
+                    }
+
                 }
             }
         }
