@@ -3,6 +3,11 @@
     <string name="playAgain">Play Again !</string>
     <string name="tryAgain">Try Again !</string>
     <string name="winnerIs">The Winner is: </string>
-    <string name="startGame">Lets start !!! </string>
+    <string name="startGameSingle">Lets start on this device!!!</string>
+    <string name="startGameDual">Lets start Dual Player mode</string>
     <string name="Welcome">Welcome to TicTacToe </string>
-</resources>
+    <string name="BluetoothOn">Enable Bluetooth</string>
+    <string name="BluetoothOff">Disable Bluetooth </string>
+    <string name="BluetoothText">Dual Player Mode</string>
+    <string name="DualPlayer">Dual Player Mode</string>
+ </resources>
