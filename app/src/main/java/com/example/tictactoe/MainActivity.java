@@ -71,6 +71,9 @@ public class MainActivity extends AppCompatActivity {
 
                     startActivity(intent);
                     reset(view);
+
+                    // TODO if the last try is completed to three in a row there will be
+                    // TODO also draw
                 }else{
                     gameStarted = false;
                     for(int counterState :State){
