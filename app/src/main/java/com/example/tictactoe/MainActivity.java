@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
                         if(counterState == 2) gameStarted = true;
                     }
                     if(!(gameStarted)){
-                        intent.putExtra("winner", "Draw");
+                        intent.putExtra("winner", "Nobody you play a draw");
                         startActivity(intent);
                         reset(view);
                     }
