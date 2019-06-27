@@ -18,7 +18,7 @@
         app:layout_constraintEnd_toStartOf="@+id/bluOff"
         app:layout_constraintHorizontal_bias="0.433"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/status" />
+        app:layout_constraintTop_toBottomOf="@+id/dualMode" />
 
     <Button
         android:id="@+id/bluOff"
@@ -29,10 +29,10 @@
         android:text="@string/BluetoothOff"
         android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/status" />
+        app:layout_constraintTop_toBottomOf="@+id/dualMode" />
 
     <TextView
-        android:id="@+id/status"
+        android:id="@+id/dualMode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -60,11 +60,11 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/status"
+        app:layout_constraintTop_toBottomOf="@+id/dualMode"
         app:layout_constraintVertical_bias="0.983" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/status"
         android:layout_width="264dp"
         android:layout_height="36dp"
         android:layout_marginStart="8dp"

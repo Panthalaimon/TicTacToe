@@ -1,6 +1,5 @@
 package com.example.tictactoe;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.bluetooth.BluetoothAdapter;
@@ -37,7 +36,7 @@ public class BluetoothEn extends AppCompatActivity {
     ClientClass BluetoothClient;
     ConnectedThread BluetoothDataTransfer;
 
-    TextView status = findViewById(R.id.status);
+    TextView status;
 
     private int state;
 
@@ -73,6 +72,7 @@ public class BluetoothEn extends AppCompatActivity {
     Handler BluetoothDataHandler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message message) {
+            status = findViewById(R.id.status);
             switch(message.what){
                 case STATE_LISTEN:
                     status.setText("Listening");
@@ -98,6 +98,8 @@ public class BluetoothEn extends AppCompatActivity {
      * Server class
      *
      */
+
+
     private class ServerClass extends Thread {
         private final BluetoothServerSocket serverSocket;
 
@@ -157,8 +159,6 @@ public class BluetoothEn extends AppCompatActivity {
 
 
 
-    public BluetoothEn() {
-    }
 
 
     private void disableBluetooth() {
@@ -222,6 +222,8 @@ public class BluetoothEn extends AppCompatActivity {
     /**
      * connected Threads
      */
+
+
     private class ConnectedThread extends Thread{
         private final BluetoothSocket mSocket;
         private final InputStream mInStream;
@@ -330,6 +332,7 @@ public class BluetoothEn extends AppCompatActivity {
         state = newState;
         handler.obtainMessage();
     }
+
 
 
     /**
