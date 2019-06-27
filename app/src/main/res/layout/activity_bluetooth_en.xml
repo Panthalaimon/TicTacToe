@@ -11,30 +11,31 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="56dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
         android:text="@string/BluetoothOn"
         android:textSize="15sp"
         app:layout_constraintEnd_toStartOf="@+id/bluOff"
-        app:layout_constraintHorizontal_bias="0.433"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/dualMode"
         app:layout_constraintTop_toBottomOf="@+id/dualMode" />
 
     <Button
         android:id="@+id/bluOff"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="56dp"
-        android:layout_marginEnd="28dp"
+        android:layout_marginEnd="8dp"
         android:text="@string/BluetoothOff"
         android:textSize="15sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dualMode" />
+        app:layout_constraintBottom_toBottomOf="@+id/bluOn"
+        app:layout_constraintEnd_toEndOf="@+id/dualMode"
+        app:layout_constraintTop_toTopOf="@+id/bluOn"
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/dualMode"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="347dp"
+        android:layout_height="52dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
@@ -43,6 +44,7 @@
         android:textSize="40sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.833"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.066" />
@@ -60,21 +62,55 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dualMode"
-        app:layout_constraintVertical_bias="0.983" />
+        app:layout_constraintTop_toBottomOf="@+id/listenButton"
+        app:layout_constraintVertical_bias="0.949" />
 
     <TextView
         android:id="@+id/status"
-        android:layout_width="264dp"
-        android:layout_height="36dp"
+        android:layout_width="99dp"
+        android:layout_height="47dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="4dp"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toBottomOf="@+id/showButton"
+        app:layout_constraintEnd_toEndOf="@+id/bluOff"
+        app:layout_constraintTop_toTopOf="@+id/showButton"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <Button
+        android:id="@+id/listenButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
+        android:text="@string/listen"
+        app:layout_constraintEnd_toStartOf="@+id/showButton"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/bluOn"
+        app:layout_constraintTop_toBottomOf="@+id/bluOn" />
+
+    <Button
+        android:id="@+id/showButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:text="@string/showList"
+        app:layout_constraintBottom_toBottomOf="@+id/listenButton"
+        app:layout_constraintEnd_toStartOf="@+id/status"
+        app:layout_constraintTop_toTopOf="@+id/listenButton"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <ListView
+        android:id="@+id/deviceList"
+        android:layout_width="230dp"
+        android:layout_height="343dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:textSize="30sp"
         app:layout_constraintBottom_toTopOf="@+id/startBluetoothGame"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/bluOn"
-        app:layout_constraintVertical_bias="0.123" />
+        app:layout_constraintEnd_toEndOf="@+id/status"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/showButton"
+        app:layout_constraintTop_toBottomOf="@+id/showButton"
+        app:layout_constraintVertical_bias="0.0" />
 </androidx.constraintlayout.widget.ConstraintLayout>

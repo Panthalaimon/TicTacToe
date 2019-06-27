@@ -6,7 +6,9 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
+import android.content.BroadcastReceiver;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -14,12 +16,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Set;
 import java.util.UUID;
 
 public class BluetoothEn extends AppCompatActivity {
@@ -35,6 +39,8 @@ public class BluetoothEn extends AppCompatActivity {
     ServerClass BluetoothServer;
     ClientClass BluetoothClient;
     ConnectedThread BluetoothDataTransfer;
+    BluetoothDevice [] btArray;
+    ListView listView;
 
     TextView status;
 
@@ -49,6 +55,8 @@ public class BluetoothEn extends AppCompatActivity {
     public static final int  STATE_CONNECTION_FAILED = 6;
     Button buttonOn;
     Button buttonOff;
+    Button listen;
+    Button showDevice;
 
     //Intent bluEnable;
 
@@ -61,10 +69,14 @@ public class BluetoothEn extends AppCompatActivity {
 
         buttonOn = findViewById(R.id.bluOn);
         buttonOff = findViewById(R.id.bluOff);
+        status = findViewById(R.id.status);
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        listen =findViewById(R.id.listenButton);
+        showDevice = findViewById(R.id.showButton);
         //  bluEnable = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
         activateBluetooth();
         disableBluetooth();
+        implementListener();
     }
 
 
@@ -72,7 +84,7 @@ public class BluetoothEn extends AppCompatActivity {
     Handler BluetoothDataHandler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message message) {
-            status = findViewById(R.id.status);
+
             switch(message.what){
                 case STATE_LISTEN:
                     status.setText("Listening");
@@ -156,55 +168,6 @@ public class BluetoothEn extends AppCompatActivity {
             }catch (Exception e){}
         }
     }
-
-
-
-
-
-    private void disableBluetooth() {
-        buttonOff.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (bluetoothAdapter.isEnabled()) {
-                    bluetoothAdapter.disable();
-                }
-            }
-        });
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_ENABLE_BT) {
-            if (resultCode == RESULT_OK) {
-                Toast.makeText(getApplicationContext(), "Blutetooth is Enable", Toast.LENGTH_LONG).show();
-            } else if (resultCode == RESULT_CANCELED) {
-                Toast.makeText(getApplicationContext(), "Bluetooth Enabling Cancelled", Toast.LENGTH_LONG).show();
-            }
-        }
-    }
-
-    private void activateBluetooth() {
-
-        buttonOn.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-                if (bluetoothAdapter == null) {
-                    Toast.makeText(getApplicationContext(), "Your device does not support bluetooth", Toast.LENGTH_LONG).show();
-                } else {
-
-                    if (!(bluetoothAdapter.isEnabled())) {
-                        Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                        startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-                    }
-                }
-            }
-        });
-
-
-    }
-
 
 
     /**
@@ -365,6 +328,96 @@ public class BluetoothEn extends AppCompatActivity {
             oSt = tempOutput;
 
         }
+    }
+
+
+    /**
+     * BroadcastReceiver
+     * ==================================================================
+     */
+
+
+    /**
+     * ============================================================
+     * Bluetooth functions
+     *
+     */
+
+    private void disableBluetooth() {
+        buttonOff.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (bluetoothAdapter.isEnabled()) {
+                    bluetoothAdapter.disable();
+                }
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_ENABLE_BT) {
+            if (resultCode == RESULT_OK) {
+                Toast.makeText(getApplicationContext(), "Blutetooth is Enable", Toast.LENGTH_LONG).show();
+            } else if (resultCode == RESULT_CANCELED) {
+                Toast.makeText(getApplicationContext(), "Bluetooth Enabling Cancelled", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    private void activateBluetooth() {
+
+        buttonOn.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                if (bluetoothAdapter == null) {
+                    Toast.makeText(getApplicationContext(), "Your device does not support bluetooth", Toast.LENGTH_LONG).show();
+                } else {
+
+                    if (!(bluetoothAdapter.isEnabled())) {
+                        Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                        startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+                    }
+                }
+            }
+        });
+    }
+
+    public void buttonShow(View view){
+        Log.d(TAG,"Discover: Looking for unpaired devices");
+
+        if(bluetoothAdapter.isDiscovering()){
+            bluetoothAdapter.cancelDiscovery();
+            Log.d(TAG,"Discover: Canceling discovery");
+
+
+
+            bluetoothAdapter.startDiscovery();
+            IntentFilter discoverDevicesIntent = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+            //registerReceiver(broadcastReceiver, discoverDevicesIntent);
+        }
+    }
+
+    private void implementListener() {
+        showDevice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Set<BluetoothDevice> bt = bluetoothAdapter.getBondedDevices();
+                String [] strings = new String[bt.size()];
+                int i=0;
+
+                if(bt.size() > 0){
+                    for(BluetoothDevice device : bt){
+                        btArray[i] = device;
+                        i++;
+                    }
+                    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_expandable_list_item_1,strings);
+                    listView.setAdapter(arrayAdapter);
+                }
+            }
+        });
     }
 
 }

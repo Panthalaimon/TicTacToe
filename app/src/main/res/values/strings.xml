@@ -10,4 +10,6 @@
     <string name="BluetoothOff">Disable Bluetooth </string>
     <string name="BluetoothText">Dual Player Mode</string>
     <string name="DualPlayer">Dual Player Mode</string>
+    <string name="showList">show Devices</string>
+    <string name="listen">listen</string>
  </resources>
