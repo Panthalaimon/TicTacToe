@@ -1,5 +1,6 @@
 package com.example.tictactoe;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.bluetooth.BluetoothAdapter;
@@ -14,6 +15,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -31,11 +33,11 @@ public class BluetoothEn extends AppCompatActivity {
     private static final boolean bool = true;
     private static final String TAG = "BluetoothGameService";
 
-    private static final String name = "TicTacToe";
+    private static final String app_name = "TicTacToe";
     private static final UUID uuid = UUID.fromString("d256873e-97d4-11e9-bc42-526af7764f64");
 
     BluetoothAdapter bluetoothAdapter;
-    Handler handler;
+    //Handler handler;
     ServerClass BluetoothServer;
     ClientClass BluetoothClient;
     ConnectedThread BluetoothDataTransfer;
@@ -52,7 +54,7 @@ public class BluetoothEn extends AppCompatActivity {
     public static final int STATE_CONNECTED = 3;
     public static final int STATE_DISCONNECTED = 4;
     public static final int STATE_MESSAGE_RECEIVED= 5;
-    public static final int  STATE_CONNECTION_FAILED = 6;
+    public static final int STATE_CONNECTION_FAILED = 6;
     Button buttonOn;
     Button buttonOff;
     Button listen;
@@ -73,6 +75,7 @@ public class BluetoothEn extends AppCompatActivity {
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         listen =findViewById(R.id.listenButton);
         showDevice = findViewById(R.id.showButton);
+        listView = findViewById(R.id.deviceList);
         //  bluEnable = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
         activateBluetooth();
         disableBluetooth();
@@ -81,28 +84,7 @@ public class BluetoothEn extends AppCompatActivity {
 
 
 
-    Handler BluetoothDataHandler = new Handler(new Handler.Callback() {
-        @Override
-        public boolean handleMessage(Message message) {
 
-            switch(message.what){
-                case STATE_LISTEN:
-                    status.setText("Listening");
-                    break;
-                case STATE_CONNECTING:
-                    status.setText("Connecting...");
-                    break;
-                case STATE_CONNECTED:
-                    status.setText("Connected");
-                    break;
-                case STATE_CONNECTION_FAILED:
-                    status.setText("Connection Failed");
-                    break;
-            }
-
-            return true;
-        }
-    });
 
 
     /**
@@ -112,37 +94,44 @@ public class BluetoothEn extends AppCompatActivity {
      */
 
 
-    private class ServerClass extends Thread {
+    private class ServerClass extends Thread
+    {
         private final BluetoothServerSocket serverSocket;
 
-        public ServerClass(){
+        public ServerClass()
+        {
             BluetoothServerSocket tmp = null;
-            try{
-                tmp = bluetoothAdapter.listenUsingRfcommWithServiceRecord("tictactoe",uuid);
+            try
+            {
+                tmp = bluetoothAdapter.listenUsingRfcommWithServiceRecord(app_name,uuid);
                 Toast.makeText(getApplicationContext(),"ServerSocket Class constructor Successful!",Toast.LENGTH_LONG).show();
-            }catch (Exception e){
+            }catch (Exception e)
+            {
             }
 
             serverSocket = tmp;
         }
 
         @Override
-        public void run(){
-            BluetoothSocket socket;
-            while (true){
-                try{
+        public void run()
+        {
+            BluetoothSocket socket =null;
+            while (socket == null)
+            {
+                try
+                {
 
                     Message message = Message.obtain();
                     message.what=STATE_CONNECTING;
                     handler.sendMessage(message);
 
                     socket = serverSocket.accept();
-                }catch (IOException e){
-
+                }catch (IOException e)
+                {
+                    e.printStackTrace();
                     Message message = Message.obtain();
                     message.what=STATE_CONNECTION_FAILED;
                     handler.sendMessage(message);
-                    break;
                 }
 
                 if(socket != null){
@@ -153,9 +142,8 @@ public class BluetoothEn extends AppCompatActivity {
                     message.what=STATE_CONNECTED;
                     handler.sendMessage(message);
                     Toast.makeText(getApplicationContext(),"sending to manage connected socket Successful!",Toast.LENGTH_LONG).show();
-                    try{
-                        serverSocket.close();
-                    } catch (Exception e){}
+
+                    // write some code for send/receive
 
                     break;
                 }
@@ -235,16 +223,21 @@ public class BluetoothEn extends AppCompatActivity {
         }
     }
 
+    /**
+     * Clientclass
+     * ================================================================
+     */
+
     private class ClientClass extends Thread{
 
-        private BluetoothSocket mSocket ;
-        private BluetoothDevice mDevice;
+        private BluetoothSocket socket ;
+        private BluetoothDevice device;
 
-        public ClientClass(BluetoothDevice device){
+        public ClientClass(BluetoothDevice mDevice){
 
-            mDevice = device;
+            device = mDevice;
             try {
-                mSocket = device.createRfcommSocketToServiceRecord(uuid);
+                socket = device.createRfcommSocketToServiceRecord(uuid);
             }catch (IOException e){
                 e.printStackTrace();
                 System.out.println("Couldn´t create mSocket for device Create line 286");
@@ -257,7 +250,7 @@ public class BluetoothEn extends AppCompatActivity {
             bluetoothAdapter.cancelDiscovery();
 
             try{
-                mSocket.connect();
+                socket.connect();
                 Message message = Message.obtain();
                 message.what = STATE_CONNECTED;
                 handler.sendMessage(message);
@@ -269,7 +262,7 @@ public class BluetoothEn extends AppCompatActivity {
 
         public void cancel(){
             try{
-                mSocket.close();
+                socket.close();
             }catch(IOException e){
                 Log.e(TAG, "close() of connect socket failed", e);
             }
@@ -385,6 +378,7 @@ public class BluetoothEn extends AppCompatActivity {
         });
     }
 
+    /*
     public void buttonShow(View view){
         Log.d(TAG,"Discover: Looking for unpaired devices");
 
@@ -399,7 +393,7 @@ public class BluetoothEn extends AppCompatActivity {
             //registerReceiver(broadcastReceiver, discoverDevicesIntent);
         }
     }
-
+*/
     private void implementListener() {
         showDevice.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -418,6 +412,49 @@ public class BluetoothEn extends AppCompatActivity {
                 }
             }
         });
+
+        listen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ServerClass serverClass = new ServerClass();
+                serverClass.start();
+
+            }
+        });
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                ClientClass clientClass = new ClientClass(btArray [i]);
+                clientClass.start();
+
+                status.setText("Conneting...");
+
+            }
+        });
     }
 
+
+    Handler handler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message message) {
+            {                switch (message.what) {
+                    case STATE_LISTEN:
+                        status.setText("Listening");
+                        break;
+                    case STATE_CONNECTING:
+                        status.setText("Connecting...");
+                        break;
+                    case STATE_CONNECTED:
+                        status.setText("Connected");
+                        break;
+                    case STATE_CONNECTION_FAILED:
+                        status.setText("Connection Failed");
+                        break;
+                }
+
+                return true;
+            }
+        }
+    });
 }

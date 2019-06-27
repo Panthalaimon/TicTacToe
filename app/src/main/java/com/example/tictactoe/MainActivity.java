@@ -52,17 +52,21 @@ public class MainActivity extends AppCompatActivity {
 
             image.animate().translationYBy(1500).setDuration(300);
 
-            for(int[] winning:winningPos){
+            for(int[] winning:winningPos)
+            {
                 Intent intent =  new Intent(MainActivity.this, WinningActivity.class);
-                if(State[winning[0]] == State[winning[1]] && State[winning[1]] == State[winning[2]] && State[winning[0]] != 2){
+                if(State[winning[0]] == State[winning[1]] && State[winning[1]] == State[winning[2]] && State[winning[0]] != 2)
+                {
                     String winnerText ="";
                     gameStarted = false;
-                    if(activePlayer == 1){
+                    if(activePlayer == 1)
+                    {
                         winnerText ="Player2";
                         intent.putExtra("winnerIs","The Winner is:");
                         intent.putExtra("winner",winnerText);
 
-                    }else if (activePlayer == 0){
+                    }else if (activePlayer == 0)
+                    {
                         winnerText="Player1";
                         intent.putExtra("winnerIs","The Winner is:");
                         intent.putExtra("winner",winnerText);
@@ -74,18 +78,21 @@ public class MainActivity extends AppCompatActivity {
 
                     // TODO if the last try is completed to three in a row there will be
                     // TODO also draw
-                }else{
+                }else
+                    {
                     gameStarted = false;
-                    for(int counterState :State){
+                    for(int counterState :State)
+                    {
                         if(counterState == 2) gameStarted = true;
                     }
-                    if(!(gameStarted)){
+                    if(!(gameStarted) && activePlayer == 1)
+                    {
                         intent.putExtra("winner", "Nobody you play a draw");
                         startActivity(intent);
                         reset(view);
                     }
 
-                }
+                    }
             }
         }
     }
