@@ -159,6 +159,53 @@ public class BluetoothEn extends AppCompatActivity {
 
 
     /**
+     * Clientclass
+     * ================================================================
+     */
+
+    private class ClientClass extends Thread{
+
+        private BluetoothSocket socket ;
+        private BluetoothDevice device;
+
+        public ClientClass(BluetoothDevice mDevice){
+
+            device = mDevice;
+            try {
+                socket = device.createRfcommSocketToServiceRecord(uuid);
+            }catch (IOException e){
+                e.printStackTrace();
+                System.out.println("Couldn´t create mSocket for device Create line 286");
+            }
+        }
+
+        public void run(){
+            Log.i(TAG, "BEGIN mConnectTread");
+            setName("ConnectThread");
+            bluetoothAdapter.cancelDiscovery();
+
+            try{
+                socket.connect();
+                Message message = Message.obtain();
+                message.what = STATE_CONNECTED;
+                handler.sendMessage(message);
+            }catch(IOException e){
+                connectionFailed();
+            }
+
+        }
+
+        public void cancel(){
+            try{
+                socket.close();
+            }catch(IOException e){
+                Log.e(TAG, "close() of connect socket failed", e);
+            }
+        }
+
+    }
+
+    /**
      * for managing Connected Sockets
      * @param socket
      */
@@ -223,52 +270,6 @@ public class BluetoothEn extends AppCompatActivity {
         }
     }
 
-    /**
-     * Clientclass
-     * ================================================================
-     */
-
-    private class ClientClass extends Thread{
-
-        private BluetoothSocket socket ;
-        private BluetoothDevice device;
-
-        public ClientClass(BluetoothDevice mDevice){
-
-            device = mDevice;
-            try {
-                socket = device.createRfcommSocketToServiceRecord(uuid);
-            }catch (IOException e){
-                e.printStackTrace();
-                System.out.println("Couldn´t create mSocket for device Create line 286");
-            }
-        }
-
-        public void run(){
-            Log.i(TAG, "BEGIN mConnectTread");
-            setName("ConnectThread");
-            bluetoothAdapter.cancelDiscovery();
-
-            try{
-                socket.connect();
-                Message message = Message.obtain();
-                message.what = STATE_CONNECTED;
-                handler.sendMessage(message);
-            }catch(IOException e){
-                connectionFailed();
-            }
-
-        }
-
-        public void cancel(){
-            try{
-                socket.close();
-            }catch(IOException e){
-                Log.e(TAG, "close() of connect socket failed", e);
-            }
-        }
-
-    }
 
     private void connectionFailed() {
         setState(STATE_LISTEN);
@@ -403,8 +404,11 @@ public class BluetoothEn extends AppCompatActivity {
                 int i=0;
 
                 if(bt.size() > 0){
+                    btArray = new BluetoothDevice[bt.size()];
                     for(BluetoothDevice device : bt){
+
                         btArray[i] = device;
+                        strings[i] = device.getName();
                         i++;
                     }
                     ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_expandable_list_item_1,strings);
@@ -428,7 +432,7 @@ public class BluetoothEn extends AppCompatActivity {
                 ClientClass clientClass = new ClientClass(btArray [i]);
                 clientClass.start();
 
-                status.setText("Conneting...");
+                status.setText("Connecting...");
 
             }
         });
