@@ -19,6 +19,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,6 +35,19 @@ import java.util.Set;
 import java.util.UUID;
 
 public class BluetoothEn extends AppCompatActivity {
+
+    int activePlayer =1;
+    public static int globalTag;
+
+    // 0: is  circle; 1: is cross; 2: is empty
+    int [] State = {2,2,2,2,2,2,2,2,2};
+
+    //winning Position
+
+    int [] [] winningPos = {{0,1,2},{3,4,5},{6,7,8},{0,3,6},{1,4,7},{2,5,8},{0,4,8},{2,4,6}};
+
+    boolean gameStarted = true;
+
     private final static int REQUEST_ENABLE_BT = 1;
     private static final boolean bool = true;
     private static final String TAG = "BluetoothGameService";
@@ -66,6 +80,7 @@ public class BluetoothEn extends AppCompatActivity {
     Button showDevice;
 
     //Intent bluEnable;
+    SendReceive sendReceive;
 
     String DeviceMACAdress;
 
@@ -146,8 +161,8 @@ public class BluetoothEn extends AppCompatActivity {
                     handler.sendMessage(message);
 //                    Toast.makeText(getApplicationContext(),"sending to manage connected socket Successful!",Toast.LENGTH_LONG).show();
 
-                   // sendReceive = new SendReceive(socket);
-                    //sendReceive.start();
+                    sendReceive = new SendReceive(socket);
+                    sendReceive.start();
 
                     break;
                 }
@@ -194,6 +209,9 @@ public class BluetoothEn extends AppCompatActivity {
                 message.what = STATE_CONNECTED;
                 handler.sendMessage(message);
 
+                sendReceive= new SendReceive(socket);
+                sendReceive.start();
+
             }catch(IOException e){
                 connectionFailed();
             }
@@ -215,12 +233,6 @@ public class BluetoothEn extends AppCompatActivity {
      * @param socket
      */
 
-    public void ManageConnectedSocket(BluetoothSocket socket){
-        BluetoothDataTransfer = new ConnectedThread(socket);
-        BluetoothDataTransfer.start();
-
-        Toast.makeText(getApplicationContext(),"Successful connection!",Toast.LENGTH_LONG).show();
-    }
 
     /**
      * connected Threads
@@ -315,6 +327,9 @@ public class BluetoothEn extends AppCompatActivity {
      *
      */
 
+    private void setGlobalState(int state[]){
+        State = state;
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -330,23 +345,8 @@ public class BluetoothEn extends AppCompatActivity {
 
 
 
-    /*
-    public void buttonShow(View view){
-        Log.d(TAG,"Discover: Looking for unpaired devices");
-
-        if(bluetoothAdapter.isDiscovering()){
-            bluetoothAdapter.cancelDiscovery();
-            Log.d(TAG,"Discover: Canceling discovery");
-
-
-
-            bluetoothAdapter.startDiscovery();
-            IntentFilter discoverDevicesIntent = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-            //registerReceiver(broadcastReceiver, discoverDevicesIntent);
-        }
-    }
-*/
     public static int buttonPressed=0;
+
     private void implementListener() {
 
         showDevice.setOnClickListener(new View.OnClickListener() {
@@ -422,9 +422,10 @@ public class BluetoothEn extends AppCompatActivity {
                         status.setText("Connection Failed");
                         break;
                     case STATE_MESSAGE_RECEIVED:
-                        byte[] readBuff =(byte[])message.obj;
-                        String tempMsg = new String(readBuff,0,message.arg1);
-                        status.setText(tempMsg);
+                        int[] actualState = {2,2,2,2,2,2,2,2,2};
+                        String tempMsg = new String(actualState,0,message.arg1);
+                        actualState= stringToIntegerArray(tempMsg);
+                        State = actualState;
                         break;
                 }
 
@@ -447,10 +448,9 @@ public class BluetoothEn extends AppCompatActivity {
     }
 
 
-/*
     private class SendReceive extends Thread{
         BluetoothSocket bluetoothSocket;
-       public final InputStream inStream;
+        InputStream inStream;
         OutputStream outStream;
 
         public SendReceive(BluetoothSocket socket){
@@ -471,9 +471,10 @@ public class BluetoothEn extends AppCompatActivity {
         public void run()
         {
             byte[]  buffer =new byte [1024];
-            int bytes;
+            int bytes = globalTag;
 
-            while(true){
+            while(true)
+            {
                 try {
                     bytes = inStream.read(buffer);
                     handler.obtainMessage(STATE_MESSAGE_RECEIVED,bytes,-1,buffer).sendToTarget();
@@ -490,5 +491,63 @@ public class BluetoothEn extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-    }*/
+    }
+
+
+
+    public void dropIn(View view){
+        ImageView image= (ImageView) view;
+        Log.i("Tag",image.getTag().toString());
+
+        int taget = Integer.parseInt(image.getTag().toString());
+
+
+        if(State[taget] == 2 && gameStarted){
+            State[taget] = activePlayer;
+            System.out.println("State =========  " + State[taget]);
+            globalTag = State[taget];
+
+            // where the magic comes out
+            String toSent = String.valueOf(State[taget]);
+            sendReceive.write(toSent.getBytes());
+
+            image.setTranslationY(-1500);
+            // set which player is on it
+            if(activePlayer == 1){
+                //Player1
+                image.setImageResource(R.drawable.x);
+                activePlayer =0;
+
+            } else if(activePlayer == 0){
+                //Player2
+                image.setImageResource(R.drawable.o);
+                activePlayer =1;
+
+            }
+
+            image.animate().translationYBy(1500).setDuration(300);
+
+
+
+        }
+    }
+
+
+    public int[] stringToIntegerArray(String s){
+        int size = s.length();
+        int[] intArray = new int[size];
+
+        for(int i=0; i<=size;i++){
+            intArray[i] = Integer.parseInt(String.valueOf(s.charAt(i)));
+        }
+
+        return intArray;
+    }
+
+    public void reset(View view){
+        State = new  int []{2,2,2,2,2,2,2,2,2};
+        ImageView image= (ImageView) view;
+        activePlayer = 1;
+        image.setTranslationY(-1500);
+    }
 }
