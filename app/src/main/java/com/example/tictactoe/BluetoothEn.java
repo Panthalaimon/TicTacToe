@@ -9,7 +9,6 @@ import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -34,10 +33,17 @@ import java.io.OutputStream;
 import java.util.Set;
 import java.util.UUID;
 
+
+/**
+ * ==========================================================================
+ *
+ */
+
+
 public class BluetoothEn extends AppCompatActivity {
 
     int activePlayer =1;
-    public static int globalTag;
+    public static int globalTag =2;
 
     // 0: is  circle; 1: is cross; 2: is empty
     int [] State = {2,2,2,2,2,2,2,2,2};
@@ -59,7 +65,6 @@ public class BluetoothEn extends AppCompatActivity {
     //Handler handler;
     ServerClass BluetoothServer;
     ClientClass BluetoothClient;
-    ConnectedThread BluetoothDataTransfer;
     BluetoothDevice [] btArray;
     ListView listView;
    // SendReceive sendReceive;
@@ -74,8 +79,7 @@ public class BluetoothEn extends AppCompatActivity {
     public static final int STATE_DISCONNECTED = 4;
     public static final int STATE_MESSAGE_RECEIVED= 5;
     public static final int STATE_CONNECTION_FAILED = 6;
-    Button buttonOn;
-    Button buttonOff;
+
     Button listen;
     Button showDevice;
 
@@ -98,6 +102,54 @@ public class BluetoothEn extends AppCompatActivity {
         listView = findViewById(R.id.deviceList);
         implementListener();
 
+        ImageView [] position = new ImageView[9];
+
+        position[0] =  findViewById(R.id.imageButton0);
+        position[0].setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dropIn(view);
+                globalTag =0;
+                String toSent = String.valueOf(State[globalTag]);
+                sendReceive.write(toSent.getBytes());
+            }
+        });
+        position[1] =  findViewById(R.id.imageButton1);
+        position[1].setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dropIn(view);
+                globalTag =1;
+                String toSent = String.valueOf(State[globalTag]);
+                sendReceive.write(toSent.getBytes());
+                System.out.print(toSent.getBytes());
+            }
+        });
+        position[2] =  findViewById(R.id.imageButton2);
+        position[2].setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dropIn(view);
+                globalTag =2;
+                String toSent = String.valueOf(State[globalTag]);
+                sendReceive.write(toSent.getBytes());
+                System.out.print(toSent.getBytes());
+            }
+        });
+        position[3] =  findViewById(R.id.imageButton3);
+        position[4] =  findViewById(R.id.imageButton4);
+        position[5] =  findViewById(R.id.imageButton5);
+        position[6] =  findViewById(R.id.imageButton6);
+        position[7] =  findViewById(R.id.imageButton7);
+        position[8] =  findViewById(R.id.imageButton8);
+
+
+
+        for(int i=0;i<8;i++){
+            if(State[i] ==1 || State[i] == 0){
+                dropIn(position[i]);
+            }
+        }
 
     }
 
@@ -230,62 +282,8 @@ public class BluetoothEn extends AppCompatActivity {
 
     /**
      * for managing Connected Sockets
-     * @param socket
      */
 
-
-    /**
-     * connected Threads
-     */
-
-
-    private class ConnectedThread extends Thread{
-        private final BluetoothSocket mSocket;
-        private final InputStream mInStream;
-        private final OutputStream mOutStream;
-
-        public ConnectedThread(BluetoothSocket socket){
-            mSocket = socket;
-            InputStream tmpIn = null;
-            OutputStream tmpOut = null;
-
-            try{
-                tmpIn = socket.getInputStream();
-                tmpOut = socket.getOutputStream();
-                Toast.makeText(getApplicationContext(),"connected** Thread constructor Successful!",Toast.LENGTH_LONG).show();
-            }catch (Exception e){}
-
-            mInStream = tmpIn;
-            mOutStream = tmpOut;
-        }
-
-        @Override
-        public void run() {
-            byte[] buffer = new byte[1024];
-            int bytes;
-
-            while (true){
-                try{
-                    bytes = mInStream.read(buffer);
-
-                }catch (Exception e){
-                    break;
-                }
-            }
-        }
-
-        public void write(byte[] bytes){
-            try{
-                mOutStream.write(bytes);
-            }catch (Exception e){}
-        }
-
-        public void cancel(){
-            try{
-                mSocket.close();
-            }catch (Exception e){}
-        }
-    }
 
 
     private void connectionFailed() {
@@ -306,19 +304,6 @@ public class BluetoothEn extends AppCompatActivity {
         state = newState;
         handler.obtainMessage();
     }
-
-
-
-    /**
-     * =======================================================================================
-      */
-
-
-
-    /**
-     * BroadcastReceiver
-     * ==================================================================
-     */
 
 
     /**
@@ -422,10 +407,17 @@ public class BluetoothEn extends AppCompatActivity {
                         status.setText("Connection Failed");
                         break;
                     case STATE_MESSAGE_RECEIVED:
-                        int[] actualState = {2,2,2,2,2,2,2,2,2};
-                        String tempMsg = new String(actualState,0,message.arg1);
-                        actualState= stringToIntegerArray(tempMsg);
+
+                        byte[] readBuff = (byte[]) message.obj;
+                        String tempMsg = new String(readBuff,0,message.arg1);
+                        int [] actualState= stringToIntegerArray(tempMsg);
+                        int size = actualState.length;
                         State = actualState;
+
+                        status.setText("MessageReceived!");
+
+
+
                         break;
                 }
 
@@ -471,7 +463,7 @@ public class BluetoothEn extends AppCompatActivity {
         public void run()
         {
             byte[]  buffer =new byte [1024];
-            int bytes = globalTag;
+            int bytes ;
 
             while(true)
             {
@@ -498,30 +490,18 @@ public class BluetoothEn extends AppCompatActivity {
     public void dropIn(View view){
         ImageView image= (ImageView) view;
         Log.i("Tag",image.getTag().toString());
-
         int taget = Integer.parseInt(image.getTag().toString());
 
-
-        if(State[taget] == 2 && gameStarted){
-            State[taget] = activePlayer;
-            System.out.println("State =========  " + State[taget]);
-            globalTag = State[taget];
-
             // where the magic comes out
-            String toSent = String.valueOf(State[taget]);
-            sendReceive.write(toSent.getBytes());
-
             image.setTranslationY(-1500);
             // set which player is on it
-            if(activePlayer == 1){
+            if(State[taget]== 1){
                 //Player1
                 image.setImageResource(R.drawable.x);
-                activePlayer =0;
 
-            } else if(activePlayer == 0){
+            } else if(State[taget] == 0){
                 //Player2
                 image.setImageResource(R.drawable.o);
-                activePlayer =1;
 
             }
 
@@ -529,7 +509,6 @@ public class BluetoothEn extends AppCompatActivity {
 
 
 
-        }
     }
 
 
@@ -537,7 +516,7 @@ public class BluetoothEn extends AppCompatActivity {
         int size = s.length();
         int[] intArray = new int[size];
 
-        for(int i=0; i<=size;i++){
+        for(int i=1; i<size;i++){
             intArray[i] = Integer.parseInt(String.valueOf(s.charAt(i)));
         }
 
@@ -550,4 +529,36 @@ public class BluetoothEn extends AppCompatActivity {
         activePlayer = 1;
         image.setTranslationY(-1500);
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        if(BluetoothServer.isAlive()){
+            BluetoothServer.cancel();
+        }
+        if(BluetoothClient.isAlive()){
+            BluetoothClient.cancel();
+        }
+        if(bluetoothAdapter.isEnabled()){
+            bluetoothAdapter.disable();
+        }
+
+
+        startActivity(new Intent(BluetoothEn.this, StartActivity.class));
+        BluetoothEn.this.finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(BluetoothServer.isAlive()){
+            BluetoothServer.cancel();
+        }
+        if(BluetoothClient.isAlive()){
+            BluetoothClient.cancel();
+        }
+
+    }
+
 }
