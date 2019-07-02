@@ -10,14 +10,22 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+/**
+ * @author Steffen Hanzlik
+ * Matriclation number: 1207417
+ *
+ * WinningActivity just show the winner or draw and a play again button
+ * which handles the user back to the mainactivity
+ */
 public class WinningActivity extends AppCompatActivity {
     TextView winnerView ;
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
 
 
-
-
-
+    /**
+     * on pressing the play again button the activity changes to the mainActivity
+     * @param view
+     */
     public void playAgain(View view){
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
@@ -26,6 +34,10 @@ public class WinningActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * set the intent sended strings in the text files
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 

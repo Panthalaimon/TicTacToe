@@ -15,13 +15,23 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
+/**
+ * @author Steffen Hanzlik
+ * Matriculation number: 1207417
+ *
+ * Start activity just for chooseing the one Device mode
+ * or two device mode
+ *
+ */
+
 public class StartActivity extends AppCompatActivity {
 
+    // open Mainactivty class
     public  void startGameSingle(View view){
         Intent intent = new Intent(this,MainActivity.class);
         startActivity(intent);
     }
-
+    //open Bluetooth_enable_Activity class
     public void startGameDual(View view){
         Intent intent = new Intent(this, BluetoothEn.class);
         startActivity(intent);
