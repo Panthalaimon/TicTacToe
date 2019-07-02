@@ -9,13 +9,16 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
+import android.widget.Toolbar;
+
+
 
 /**
  * @author Steffen Hanzlik
  * Matriculation Number: 1207417
  * MainActivity
  */
-public class MainActivity extends AppCompatActivity {
+public class  MainActivity extends AppCompatActivity {
 
     int activePlayer =1;
 
@@ -132,11 +135,18 @@ public class MainActivity extends AppCompatActivity {
      *
      * @param savedInstanceState
      */
+private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+
+
+
     }
+
+
 }

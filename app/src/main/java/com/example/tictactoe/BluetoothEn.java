@@ -44,9 +44,9 @@ import java.util.UUID;
 
 public class BluetoothEn extends AppCompatActivity {
 
-    int activePlayer =1;
-    public static int globalTag =2;
-    public static int buttonPressed=0;
+    int activePlayer = 1;
+    public static int globalTag = 2;
+    public static int buttonPressed = 0;
 
     private int state;
     public static final int STATE_NONE = 0;
@@ -54,18 +54,18 @@ public class BluetoothEn extends AppCompatActivity {
     public static final int STATE_CONNECTING = 2;
     public static final int STATE_CONNECTED = 3;
     public static final int STATE_DISCONNECTED = 4;
-    public static final int STATE_MESSAGE_RECEIVED= 5;
+    public static final int STATE_MESSAGE_RECEIVED = 5;
     public static final int STATE_CONNECTION_FAILED = 6;
     private final static int REQUEST_ENABLE_BT = 7;
     // 0: is  circle; 1: is cross; 2: is empty
-    int [] State = {2,2,2,2,2,2,2,2,2};
+    int[] State = {2, 2, 2, 2, 2, 2, 2, 2, 2};
 
     //winning Position
 
-    int [] [] winningPos = {{0,1,2},{3,4,5},{6,7,8},{0,3,6},{1,4,7},{2,5,8},{0,4,8},{2,4,6}};
+    int[][] winningPos = {{0, 1, 2}, {3, 4, 5}, {6, 7, 8}, {0, 3, 6}, {1, 4, 7}, {2, 5, 8}, {0, 4, 8}, {2, 4, 6}};
 
     boolean gameStarted = true;
-
+    boolean token = true;
 
     private static final boolean bool = true;
     private static final String TAG = "BluetoothGameService";
@@ -73,10 +73,11 @@ public class BluetoothEn extends AppCompatActivity {
     private static final String app_name = "TicTacToe";
     private static final UUID uuid = UUID.fromString("d256873e-97d4-11e9-bc42-526af7764f64");
 
+
     BluetoothAdapter bluetoothAdapter;
     ServerClass BluetoothServer;
     ClientClass BluetoothClient;
-    BluetoothDevice [] btArray;
+    BluetoothDevice[] btArray;
     ListView listView;
     TextView status;
 
@@ -91,7 +92,6 @@ public class BluetoothEn extends AppCompatActivity {
 
 
     /**
-     *
      * @param savedInstanceState
      */
     @Override
@@ -102,59 +102,65 @@ public class BluetoothEn extends AppCompatActivity {
 
         status = findViewById(R.id.status);
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        listen =findViewById(R.id.listenButton);
+        listen = findViewById(R.id.listenButton);
         showDevice = findViewById(R.id.showButton);
         listView = findViewById(R.id.deviceList);
         implementListener();
 
-        ImageView [] position = new ImageView[9];
+        ImageView[] position = new ImageView[9];
 
-        position[0] =  findViewById(R.id.imageButton0);
+//        for(int i=0;i<8;i++){
+//            if(State[i] ==1 || State[i] == 0){
+//                dropIn(position[i]);
+//            }
+//        }
+
+        position[0] = findViewById(R.id.imageButton0);
         position[0].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dropIn(view);
-                globalTag =0;
+                int a;
+                globalTag = 0;
                 String toSent = String.valueOf(State[globalTag]);
-                sendReceive.write(toSent.getBytes());
+                a = sendReceive.write(toSent.getBytes());
+                if(a>-1) {
+                    State[globalTag] = a;
+                    dropIn(view);
+                }
             }
         });
-        position[1] =  findViewById(R.id.imageButton1);
+        position[1] = findViewById(R.id.imageButton1);
         position[1].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dropIn(view);
-                globalTag =1;
+
+                globalTag = 1;
                 String toSent = String.valueOf(State[globalTag]);
                 sendReceive.write(toSent.getBytes());
-                System.out.print(toSent.getBytes());
+                dropIn(view);
+
             }
         });
-        position[2] =  findViewById(R.id.imageButton2);
+        position[2] = findViewById(R.id.imageButton2);
         position[2].setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dropIn(view);
-                globalTag =2;
+
+                globalTag = 2;
                 String toSent = String.valueOf(State[globalTag]);
                 sendReceive.write(toSent.getBytes());
                 System.out.print(toSent.getBytes());
+                dropIn(view);
             }
         });
-        position[3] =  findViewById(R.id.imageButton3);
-        position[4] =  findViewById(R.id.imageButton4);
-        position[5] =  findViewById(R.id.imageButton5);
-        position[6] =  findViewById(R.id.imageButton6);
-        position[7] =  findViewById(R.id.imageButton7);
-        position[8] =  findViewById(R.id.imageButton8);
+        position[3] = findViewById(R.id.imageButton3);
 
+        position[4] = findViewById(R.id.imageButton4);
+        position[5] = findViewById(R.id.imageButton5);
+        position[6] = findViewById(R.id.imageButton6);
+        position[7] = findViewById(R.id.imageButton7);
+        position[8] = findViewById(R.id.imageButton8);
 
-
-        for(int i=0;i<8;i++){
-            if(State[i] ==1 || State[i] == 0){
-                dropIn(position[i]);
-            }
-        }
 
     }
 
@@ -166,33 +172,34 @@ public class BluetoothEn extends AppCompatActivity {
     Handler handler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message message) {
-            {   switch (message.what) {
-                case STATE_LISTEN:
-                    status.setText("Listening");
-                    break;
-                case STATE_CONNECTING:
-                    status.setText("Connecting...");
-                    break;
-                case STATE_CONNECTED:
-                    status.setText("Connected");
-                    break;
-                case STATE_CONNECTION_FAILED:
-                    status.setText("Connection Failed");
-                    break;
-                case STATE_MESSAGE_RECEIVED:
+            {
+                switch (message.what) {
+                    case STATE_LISTEN:
+                        status.setText("Listening");
+                        break;
+                    case STATE_CONNECTING:
+                        status.setText("Connecting...");
+                        break;
+                    case STATE_CONNECTED:
+                        status.setText("Connected");
+                        break;
+                    case STATE_CONNECTION_FAILED:
+                        status.setText("Connection Failed");
+                        break;
+                    case STATE_MESSAGE_RECEIVED:
 
-                    byte[] readBuff = (byte[]) message.obj;
-                    String tempMsg = new String(readBuff,0,message.arg1);
-                    int [] actualState= stringToIntegerArray(tempMsg);
-                    int size = actualState.length;
-                    State = actualState;
+                        byte[] readBuff = (byte[]) message.obj;
+                        String tempMsg = new String(readBuff, 0, message.arg1);
+                        int[] actualState = stringToIntegerArray(tempMsg);
+                        globalTag = actualState[0];
+                        int size = actualState.length;
+                        State[globalTag] = 0;
 
-                    status.setText("MessageReceived!");
+                        status.setText("MessageReceived!");
 
 
-
-                    break;
-            }
+                        break;
+                }
 
                 return true;
             }
@@ -200,25 +207,19 @@ public class BluetoothEn extends AppCompatActivity {
     });
 
 
-
     /**
      * ==================================================================================================
      * Server class
-     *
      */
-    private class ServerClass extends Thread
-    {
+    private class ServerClass extends Thread {
         private final BluetoothServerSocket serverSocket;
 
-        public ServerClass()
-        {
+        public ServerClass() {
             BluetoothServerSocket tmp = null;
-            try
-            {
-                tmp = bluetoothAdapter.listenUsingRfcommWithServiceRecord(app_name,uuid);
-                Toast.makeText(getApplicationContext(),"ServerSocket Class constructor Successful!",Toast.LENGTH_LONG).show();
-            }catch (Exception e)
-            {
+            try {
+                tmp = bluetoothAdapter.listenUsingRfcommWithServiceRecord(app_name, uuid);
+                Toast.makeText(getApplicationContext(), "ServerSocket Class constructor Successful!", Toast.LENGTH_LONG).show();
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
@@ -226,51 +227,43 @@ public class BluetoothEn extends AppCompatActivity {
         }
 
         @Override
-        public void run()
-        {
-            BluetoothSocket socket =null;
-            while (socket == null)
-            {
-                try
-                {
+        public void run() {
+            BluetoothSocket socket = null;
+            while (socket == null) {
+//                try
+//                {
 
-                    Message message = Message.obtain();
-                    message.what=STATE_CONNECTING;
-                    handler.sendMessage(message);
-//TODO inmplement sendRecieve
-                    //sendReceive = new SendReceive(socket);
-                    //sendReceive.start();
+                Message message = Message.obtain();
+                message.what = STATE_CONNECTING;
+                handler.sendMessage(message);
 
-                    socket = serverSocket.accept();
-                }catch (IOException e)
-                {
-                    e.printStackTrace();
-                    Message message = Message.obtain();
-                    message.what=STATE_CONNECTION_FAILED;
-                    handler.sendMessage(message);
-                }
+//                    socket = serverSocket.accept();
+//                }catch (IOException e)
+//                {
+//                    e.printStackTrace();
+//                    Message message = Message.obtain();
+//                    message.what=STATE_CONNECTION_FAILED;
+//                    handler.sendMessage(message);
+//                }
 
-                if(socket != null){
+//                if(socket != null){
 
-//                    ManageConnectedSocket(socket);
 
-                    Message message = Message.obtain();
-                    message.what=STATE_CONNECTED;
-                    handler.sendMessage(message);
 //                    Toast.makeText(getApplicationContext(),"sending to manage connected socket Successful!",Toast.LENGTH_LONG).show();
 
-                    sendReceive = new SendReceive(socket);
-                    sendReceive.start();
+                sendReceive = new SendReceive(serverSocket);
+                sendReceive.start();
 
-                    break;
-                }
+                break;
             }
         }
+//        }
 
-        public void cancel(){
-            try{
+        public void cancel() {
+            try {
                 serverSocket.close();
-            }catch (Exception e){}
+            } catch (Exception e) {
+            }
         }
     }
 
@@ -280,112 +273,147 @@ public class BluetoothEn extends AppCompatActivity {
      * ================================================================
      */
 
-    private class ClientClass extends Thread{
+    private class ClientClass extends Thread {
 
-        private BluetoothSocket socket ;
+
         private BluetoothDevice device;
 
-        public ClientClass(BluetoothDevice mDevice){
+        public ClientClass(BluetoothDevice mDevice) {
 
             device = mDevice;
-            try {
-                socket = device.createRfcommSocketToServiceRecord(uuid);
-            }catch (IOException e){
-                e.printStackTrace();
-                System.out.println("Couldn´t create mSocket for device Create line 286");
-            }
         }
 
-        public void run(){
+        public void run() {
             Log.i(TAG, "BEGIN mConnectTread");
             setName("ConnectThread");
             bluetoothAdapter.cancelDiscovery();
 
-            try{
-                socket.connect();
-                Message message = Message.obtain();
-                message.what = STATE_CONNECTED;
-                handler.sendMessage(message);
+//            try{
+//                socket.connect();
+//                Message message = Message.obtain();
+//                message.what = STATE_CONNECTED;
+//                handler.sendMessage(message);
 
-                sendReceive= new SendReceive(socket);
-                sendReceive.start();
+            sendReceive = new SendReceive(device);
+            sendReceive.start();
 
-            }catch(IOException e){
-                connectionFailed();
-            }
+//            }catch(IOException e){
+//                connectionFailed();
+//            }
 
         }
-
-        public void cancel(){
-            try{
-                socket.close();
-            }catch(IOException e){
-                Log.e(TAG, "close() of connect socket failed", e);
-            }
-        }
+//
+//        public void cancel(){
+//            try{
+//                socket.close();
+//            }catch(IOException e){
+//                Log.e(TAG, "close() of connect socket failed", e);
+//            }
+//        }
 
     }
 
     /**
      * for managing Connected Sockets
      */
-    private class SendReceive extends Thread{
+
+    private class SendReceive extends Thread {
         BluetoothSocket bluetoothSocket;
+        BluetoothDevice bluetoothDevice;
         InputStream inStream;
         OutputStream outStream;
+        BluetoothServerSocket bluetoothServerSocket;
 
-        public SendReceive(BluetoothSocket socket){
-            bluetoothSocket =socket;
-            InputStream tempIn = null;
-            OutputStream tempOut = null;
+        public SendReceive(BluetoothDevice device) {
 
-            try{
-                tempIn = bluetoothSocket.getInputStream();
-                tempOut = bluetoothSocket.getOutputStream();
-            }catch(IOException e){
-                e.printStackTrace();
-            }
-            inStream = tempIn;
-            outStream = tempOut;
+            bluetoothDevice = device;
         }
 
-        public void run()
-        {
-            byte[]  buffer =new byte [1024];
-            int bytes ;
+        public SendReceive(BluetoothServerSocket socket) {
+            bluetoothServerSocket = socket;
+        }
 
-            while(true)
-            {
+        public void run() {
+            byte[] buffer = new byte[1024];
+            int bytes;
+
+            InputStream tempIn = null;
+            OutputStream tempOut = null;
+            try {
+                if (bluetoothDevice != null) {
+                    token = false;
+                    bluetoothSocket = (bluetoothDevice.createRfcommSocketToServiceRecord(uuid));
+
+                    bluetoothSocket.connect();
+                } else {
+                    token = true;
+                    bluetoothSocket = bluetoothServerSocket.accept();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            while (true) {
                 try {
-                    bytes = inStream.read(buffer);
-                    handler.obtainMessage(STATE_MESSAGE_RECEIVED,bytes,-1,buffer).sendToTarget();
-                }catch(IOException e){
+
+                    Message message = Message.obtain();
+                    message.what = STATE_CONNECTED;
+                    handler.sendMessage(message);
+                    try {
+                        tempIn = bluetoothSocket.getInputStream();
+                        tempOut = bluetoothSocket.getOutputStream();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    inStream = tempIn;
+                    outStream = tempOut;
+                    bytes = -1;
+                    while (true) {
+                        if ((bytes = inStream.read(buffer)) != -1) {
+                            token =true;
+                            //    bytes = inStream.read(buffer);
+                            handler.obtainMessage(STATE_MESSAGE_RECEIVED, bytes, -1, buffer).sendToTarget();
+                            break;
+                        }
+                    }
+                    //       bluetoothSocket.close();
+                } catch (IOException e) {
                     e.printStackTrace();
                     System.out.println("something wrong in line 500");
                 }
             }
         }
-        public void write(byte[] bytes){
-            try {
-                outStream.write(bytes);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+
+        public int write(byte[] bytes) {
+            if (token) {
+                try {
+                    outStream.write(bytes);
+                    token =false;
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                if (bluetoothServerSocket != null) {
+                    return 0;
+                } else return 1;
+            }return -1;
         }
     }
 
 
 
-    private void connectionFailed() {
-        setState(STATE_LISTEN);
-
-        // Send a failure message back to the Activity
-        Message message = handler.obtainMessage(5);
-        Bundle bundle = new Bundle();
-        bundle.putString("toast", "Unable to connect to device");
-        message.setData(bundle);
-        handler.sendMessage(message);
-    }
+//
+//    private void connectionFailed() {
+//        setState(STATE_LISTEN);
+//
+//        // Send a failure message back to the Activity
+//        Message message = handler.obtainMessage(5);
+//        Bundle bundle = new Bundle();
+//        bundle.putString("toast", "Unable to connect to device");
+//        message.setData(bundle);
+//        handler.sendMessage(message);
+//    }
 
     private void setState(int newState){
         if(bool){
@@ -428,32 +456,38 @@ public class BluetoothEn extends AppCompatActivity {
         showDevice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(buttonPressed==0) {
-                    buttonPressed =1;
-                    }else {
-                    buttonPressed=0;
-                }
-                if(buttonPressed==1){
-                    showList();
-                    Set<BluetoothDevice> bt = bluetoothAdapter.getBondedDevices();
-                    String[] strings = new String[bt.size()];
-
-                    int i = 0;
-
-                    if (bt.size() > 0) {
-                        btArray = new BluetoothDevice[bt.size()];
-                        for (BluetoothDevice device : bt) {
-
-                            btArray[i] = device;
-                            strings[i] = device.getName();
-                            i++;
-                        }
-                        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_expandable_list_item_1, strings);
-                        listView.setAdapter(arrayAdapter);
+                if (bluetoothAdapter.isEnabled()) {
+                    if (buttonPressed == 0) {
+                        buttonPressed = 1;
+                    } else {
+                        buttonPressed = 0;
                     }
-                }
-                if(buttonPressed ==0){
-                    hideList();
+                    if (buttonPressed == 1) {
+
+                        showList();
+                        Set<BluetoothDevice> bt = bluetoothAdapter.getBondedDevices();
+                        String[] strings = new String[bt.size()];
+
+                        int i = 0;
+
+                        if (bt.size() > 0) {
+                            btArray = new BluetoothDevice[bt.size()];
+                            for (BluetoothDevice device : bt) {
+
+                                btArray[i] = device;
+                                strings[i] = device.getName();
+                                i++;
+                            }
+                            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_expandable_list_item_1, strings);
+                            listView.setAdapter(arrayAdapter);
+                        }
+                    }
+                    if (buttonPressed == 0) {
+                        hideList();
+                    }
+                }else{
+
+                    Toast.makeText(getApplicationContext(),"You must enable Bluetooth on your device!",Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -461,8 +495,12 @@ public class BluetoothEn extends AppCompatActivity {
         listen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(bluetoothAdapter.isEnabled()){
                 ServerClass serverClass = new ServerClass();
                 serverClass.start();
+                }else{
+                    Toast.makeText(getApplicationContext(),"You must enable Bluetooth on your device!",Toast.LENGTH_LONG).show();
+                }
 
             }
         });
@@ -574,7 +612,7 @@ public class BluetoothEn extends AppCompatActivity {
             BluetoothServer.cancel();
         }
         if(BluetoothClient.isAlive()){
-            BluetoothClient.cancel();
+            //BluetoothClient.cancel();
         }
         if(bluetoothAdapter.isEnabled()){
             bluetoothAdapter.disable();
@@ -595,7 +633,7 @@ public class BluetoothEn extends AppCompatActivity {
             BluetoothServer.cancel();
         }
         if(BluetoothClient.isAlive()){
-            BluetoothClient.cancel();
+            //BluetoothClient.cancel();
         }
 
     }
