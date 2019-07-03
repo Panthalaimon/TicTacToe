@@ -73,7 +73,8 @@ public class BluetoothEn extends AppCompatActivity {
     private static final String app_name = "TicTacToe";
     private static final UUID uuid = UUID.fromString("d256873e-97d4-11e9-bc42-526af7764f64");
 
-
+    ClientClass clientClass;
+    ServerClass serverClass;
     BluetoothAdapter bluetoothAdapter;
     ServerClass BluetoothServer;
     ClientClass BluetoothClient;
@@ -89,7 +90,18 @@ public class BluetoothEn extends AppCompatActivity {
 
     String DeviceMACAdress;
     private ArrayAdapter<String> mAdapter;
+    int[] refs = {
+            R.id.imageButton0,
+            R.id.imageButton1,
+            R.id.imageButton2,
+            R.id.imageButton3,
+            R.id.imageButton4,
+            R.id.imageButton5,
+            R.id.imageButton6,
+            R.id.imageButton7,
+            R.id.imageButton8,
 
+    };
 
     /**
      * @param savedInstanceState
@@ -115,20 +127,30 @@ public class BluetoothEn extends AppCompatActivity {
 //            }
 //        }
 
-        position[0] = findViewById(R.id.imageButton0);
-        position[0].setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int a;
-                globalTag = 0;
-                String toSent = String.valueOf(State[globalTag]);
-                a = sendReceive.write(toSent.getBytes());
-                if(a>-1) {
-                    State[globalTag] = a;
-                    dropIn(view);
+
+
+        for (int i = 0; i < 9; i++) {
+            position[i] = findViewById(refs[i]);
+            final int j = i;
+            position[i].setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int a;
+                    globalTag = j;
+                    String toSent;
+                    if (State[globalTag] == 2) {
+                        a = sendReceive.write(String.valueOf(globalTag).getBytes());
+                        if(a>-1) {
+                            State[globalTag] = a;
+                            dropIn(view);
+
+                            //TODO check if wins
+                        }
+                    }
                 }
-            }
-        });
+            });
+        }
+       /*
         position[1] = findViewById(R.id.imageButton1);
         position[1].setOnClickListener(new View.OnClickListener() {
             @Override
@@ -160,7 +182,7 @@ public class BluetoothEn extends AppCompatActivity {
         position[6] = findViewById(R.id.imageButton6);
         position[7] = findViewById(R.id.imageButton7);
         position[8] = findViewById(R.id.imageButton8);
-
+*/
 
     }
 
@@ -191,14 +213,15 @@ public class BluetoothEn extends AppCompatActivity {
                         byte[] readBuff = (byte[]) message.obj;
                         String tempMsg = new String(readBuff, 0, message.arg1);
                         int[] actualState = stringToIntegerArray(tempMsg);
-                        globalTag = actualState[0];
-                        int size = actualState.length;
-                        State[globalTag] = 0;
+                        globalTag = Integer.valueOf(tempMsg);
+                        //int size = actualState.length;
+                        if (serverClass != null) State[globalTag] = 1;
+                        else State[globalTag] = 0;
+                        dropIn(findViewById(refs[globalTag]));
 
+                        // TODO check if win
                         status.setText("MessageReceived!");
 
-
-                        break;
                 }
 
                 return true;
@@ -496,8 +519,9 @@ public class BluetoothEn extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if(bluetoothAdapter.isEnabled()){
-                ServerClass serverClass = new ServerClass();
+                serverClass = new ServerClass(handler, bluetoothAdapter, getApplicationContext());
                 serverClass.start();
+                sendReceive = serverClass.getSendReceive();
                 }else{
                     Toast.makeText(getApplicationContext(),"You must enable Bluetooth on your device!",Toast.LENGTH_LONG).show();
                 }
@@ -508,9 +532,9 @@ public class BluetoothEn extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                ClientClass clientClass = new ClientClass(btArray [i]);
+                clientClass = new ClientClass(btArray [i], bluetoothAdapter, handler);
                 clientClass.start();
-
+                sendReceive = clientClass.getSendReceive();
                 status.setText("Connecting...");
 
             }

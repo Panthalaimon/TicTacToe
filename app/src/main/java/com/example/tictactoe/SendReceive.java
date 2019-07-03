@@ -24,13 +24,15 @@ public class SendReceive extends Thread {
     boolean token = true;
     private static final UUID uuid = UUID.fromString("d256873e-97d4-11e9-bc42-526af7764f64");
 
-    public SendReceive(BluetoothDevice device) {
-
+    public SendReceive(BluetoothDevice device, Handler handler) {
+        this.handler = handler;
         bluetoothDevice = device;
     }
 
-    public SendReceive(BluetoothServerSocket socket) {
+    public SendReceive(BluetoothServerSocket socket, Handler handler) {
         bluetoothServerSocket = socket;
+        this.handler = handler;
+
     }
 
     public void run() {
@@ -70,14 +72,14 @@ public class SendReceive extends Thread {
                 outStream = tempOut;
                 bytes = -1;
                 while (true) {
+
                     if ((bytes = inStream.read(buffer)) != -1) {
-                        token =true;
+                        token = true;
                         //    bytes = inStream.read(buffer);
                         handler.obtainMessage(STATE_MESSAGE_RECEIVED, bytes, -1, buffer).sendToTarget();
                         break;
                     }
                 }
-                //       bluetoothSocket.close();
             } catch (IOException e) {
                 e.printStackTrace();
                 System.out.println("something wrong in line 500");
@@ -90,6 +92,7 @@ public class SendReceive extends Thread {
             try {
                 outStream.write(bytes);
                 token =false;
+
 
             } catch (IOException e) {
                 e.printStackTrace();

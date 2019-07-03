@@ -21,7 +21,10 @@ public class ServerClass extends Thread {
         SendReceive sendReceive;
         Context context;
 
-        public ServerClass() {
+        public ServerClass(Handler handler, BluetoothAdapter adap, Context context) {
+            this.handler = handler;
+            this.context = context;
+            this.bluetoothAdapter = adap;
             BluetoothServerSocket tmp = null;
             try {
                 tmp = bluetoothAdapter.listenUsingRfcommWithServiceRecord(app_name, uuid);
@@ -58,12 +61,17 @@ public class ServerClass extends Thread {
 
 //                    Toast.makeText(getApplicationContext(),"sending to manage connected socket Successful!",Toast.LENGTH_LONG).show();
 
-                sendReceive = new SendReceive(serverSocket);
+                sendReceive = new SendReceive(serverSocket, handler);
                 sendReceive.start();
 
                 break;
             }
         }
+
+    public SendReceive getSendReceive() {
+        while (sendReceive == null);
+        return sendReceive;
+    }
 //        }
 
         public void cancel() {
