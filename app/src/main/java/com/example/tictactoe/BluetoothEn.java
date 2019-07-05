@@ -47,6 +47,7 @@ public class BluetoothEn extends AppCompatActivity {
     int activePlayer = 1;
     public static int globalTag = 2;
     public static int buttonPressed = 0;
+    private static BluetoothEn mContext;
 
     private int state;
     public static final int STATE_NONE = 0;
@@ -450,6 +451,9 @@ public class BluetoothEn extends AppCompatActivity {
             //BluetoothClient.cancel();
         }
 
+    }
+    public static BluetoothEn getContext() {
+        return mContext;
     }
 
 }
