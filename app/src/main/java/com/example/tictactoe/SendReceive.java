@@ -3,8 +3,11 @@ package com.example.tictactoe;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,6 +26,11 @@ public class SendReceive extends Thread {
     Handler handler;
     boolean token = true;
     private static final UUID uuid = UUID.fromString("d256873e-97d4-11e9-bc42-526af7764f64");
+    int[] State = {2, 2, 2, 2, 2, 2, 2, 2, 2};
+    int[][] winningPos = {{0, 1, 2}, {3, 4, 5}, {6, 7, 8}, {0, 3, 6}, {1, 4, 7}, {2, 5, 8}, {0, 4, 8}, {2, 4, 6}};
+    boolean gameStarted = true;
+    int activePlayer = 1;
+    Context context;
 
     public SendReceive(BluetoothDevice device, Handler handler) {
         this.handler = handler;
@@ -34,6 +42,7 @@ public class SendReceive extends Thread {
         this.handler = handler;
 
     }
+
 
     public void run() {
         byte[] buffer = new byte[1024];
@@ -92,15 +101,46 @@ public class SendReceive extends Thread {
             try {
                 outStream.write(bytes);
                 token =false;
-                //TODO Check if win
+
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
             if (bluetoothServerSocket != null) {
                 return 0;
             } else return 1;
         }return -1;
     }
+
+
 }
 
+/*
+            Intent myIntent = new Intent(context.getApplicationContext(), WinningActivity.class);
+            for (int[] winning : winningPos) {
+                if (State[winning[0]] == State[winning[1]] && State[winning[1]] == State[winning[2]] && State[winning[0]] != 2) {
+                    String winnerText = "";
+                    gameStarted = false;
+                    // if player one solves three in a row put extra into the intent the winner is
+                    // and player 1
+                    if (activePlayer ==1) {
+                        winnerText = "Player2";
+                        myIntent.putExtra("winnerIs", "The Winner is:");
+                        myIntent.putExtra("winner", winnerText);
+
+                        // if player one solves three in a row put extra into the intent the winner is
+                        // and player 2
+                    } else if (activePlayer ==2) {
+                        winnerText = "Player1";
+                        myIntent.putExtra("winnerIs", "The Winner is:");
+                        myIntent.putExtra("winner", winnerText);
+
+                    }
+                }
+
+                context.startActivity(myIntent);
+
+            }
+
+ */
