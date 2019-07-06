@@ -58,11 +58,5 @@ public class ServerClass extends Thread {
     }
 
 
-        public void cancel() {
-            try {
-                serverSocket.close();
-            } catch (Exception e) {
-            }
-        }
     }
 

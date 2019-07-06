@@ -16,6 +16,7 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.ServerSocket;
 import java.util.UUID;
 import java.util.zip.CheckedOutputStream;
 
@@ -134,6 +135,17 @@ public class SendReceive extends Thread {
 
             } else return 1;
         }return -1;
+    }
+
+
+    public void cancel() {
+        try {
+            inStream.close();
+            outStream.close();
+            bluetoothSocket.close();
+            bluetoothServerSocket.close();
+        } catch (Exception e) {
+        }
     }
 
 

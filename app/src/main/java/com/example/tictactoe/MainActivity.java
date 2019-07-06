@@ -71,10 +71,12 @@ public class  MainActivity extends AppCompatActivity {
              */
 
             for(int[] winning:winningPos) {
+                boolean winnerTextShow =false;
                 Intent intent = new Intent(MainActivity.this, WinningActivity.class);
                 if (State[winning[0]] == State[winning[1]] && State[winning[1]] == State[winning[2]] && State[winning[0]] != 2) {
                     String winnerText = "";
                     gameStarted = false;
+
                     // if player one solves three in a row put extra into the intent the winner is
                     // and player 1
                     if (activePlayer == 1) {
@@ -82,6 +84,8 @@ public class  MainActivity extends AppCompatActivity {
                         intent.putExtra("winnerIs", "The Winner is:");
                         intent.putExtra("winner", winnerText);
                         intent.putExtra("state", State);
+                        winnerTextShow =true;
+
 
                         // if player one solves three in a row put extra into the intent the winner is
                         // and player 2
@@ -90,33 +94,32 @@ public class  MainActivity extends AppCompatActivity {
                         intent.putExtra("winnerIs", "The Winner is:");
                         intent.putExtra("winner", winnerText);
                         intent.putExtra("state", State);
-
+                        winnerTextShow =true;
                     }
 
                     startActivity(intent);
-                    //reset(view);
+                    reset(view);
 
                     // TODO if the last try is completed to three in a row there will be
                     // TODO also draw
                     // draw doesnt work in the moment
-                }else
-                    {
-                    gameStarted = false;
-                    for(int counterState :State)
-                    {
-                        if(counterState == 2)
-                        {
-                            gameStarted = true;}
 
-                    }if(!(gameStarted))
-                    {
+
+                }else{
+                    gameStarted = false;
+                for(int counterState :State) {
+                    if (counterState == 2) {
+                        gameStarted = true;
+                    }
+
+                }if(gameStarted == false ) {
                         intent.putExtra("winner", "Nobody you play a draw");
                         intent.putExtra("state", State);
                         startActivity(intent);
-                        //reset(view);
-                    }
+                        reset(view);
 
                     }
+                }
             }
         }
     }
@@ -153,4 +156,13 @@ private Toolbar toolbar;
         startActivity(intent);
     }
 
+    public boolean testState(int[] mState) {
+        boolean state = true;
+        for (int i = 0; i < 9; i++) {
+            if (State[i] != 2) {
+                state = false;
+            }
+        }
+        return state;
+    }
 }
