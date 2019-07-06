@@ -21,8 +21,9 @@
 
         <ImageView
             android:id="@+id/imageButton0"
-            android:layout_width="126dp"
-            android:layout_height="119dp"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:layout_marginTop="20sp"
             android:onClick="dropIn"
             android:tag="0"
             app:layout_column="0"
@@ -30,9 +31,10 @@
 
         <ImageView
             android:id="@+id/imageButton1"
-            android:layout_width="126dp"
-            android:layout_height="119dp"
-            android:layout_marginLeft="8dp"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:layout_marginLeft="20sp"
+            android:layout_marginTop="20sp"
             android:onClick="dropIn"
             android:tag="1"
             app:layout_column="1"
@@ -40,9 +42,10 @@
 
         <ImageView
             android:id="@+id/imageButton2"
-            android:layout_width="126dp"
-            android:layout_height="119dp"
-            android:layout_marginLeft="8dp"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:layout_marginStart="10sp"
+            android:layout_marginTop="20sp"
             android:onClick="dropIn"
             android:tag="2"
             app:layout_column="2"
@@ -50,9 +53,9 @@
 
         <ImageView
             android:id="@+id/imageButton3"
-            android:layout_width="126dp"
-            android:layout_height="119dp"
-            android:layout_marginTop="30sp"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:layout_marginTop="40sp"
             android:onClick="dropIn"
             android:tag="3"
             app:layout_column="0"
@@ -60,10 +63,10 @@
 
         <ImageView
             android:id="@+id/imageButton4"
-            android:layout_width="126dp"
-            android:layout_height="119dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="30sp"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:layout_marginLeft="20sp"
+            android:layout_marginTop="40sp"
             android:onClick="dropIn"
             android:tag="4"
             app:layout_column="1"
@@ -71,10 +74,10 @@
 
         <ImageView
             android:id="@+id/imageButton5"
-            android:layout_width="126dp"
-            android:layout_height="119dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="30sp"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:layout_marginStart="10sp"
+            android:layout_marginTop="40sp"
             android:onClick="dropIn"
             android:tag="5"
             app:layout_column="2"
@@ -82,9 +85,9 @@
 
         <ImageView
             android:id="@+id/imageButton6"
-            android:layout_width="126dp"
-            android:layout_height="119dp"
-            android:layout_marginTop="30sp"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:layout_marginTop="40sp"
             android:onClick="dropIn"
             android:tag="6"
             app:layout_column="0"
@@ -92,10 +95,10 @@
 
         <ImageView
             android:id="@+id/imageButton7"
-            android:layout_width="126dp"
-            android:layout_height="119dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="30sp"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:layout_marginLeft="20sp"
+            android:layout_marginTop="40sp"
             android:onClick="dropIn"
             android:tag="7"
             app:layout_column="1"
@@ -103,10 +106,10 @@
 
         <ImageView
             android:id="@+id/imageButton8"
-            android:layout_width="126dp"
-            android:layout_height="119dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="30sp"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:layout_marginStart="10sp"
+            android:layout_marginTop="40sp"
             android:onClick="dropIn"
             android:tag="8"
             app:layout_column="2"

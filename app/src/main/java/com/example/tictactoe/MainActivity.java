@@ -80,7 +80,7 @@ public class  MainActivity extends AppCompatActivity {
                     // if player one solves three in a row put extra into the intent the winner is
                     // and player 1
                     if (activePlayer == 1) {
-                        winnerText = "Player2";
+                        winnerText = "Player 2";
                         intent.putExtra("winnerIs", "The Winner is:");
                         intent.putExtra("winner", winnerText);
                         intent.putExtra("state", State);
@@ -90,7 +90,7 @@ public class  MainActivity extends AppCompatActivity {
                         // if player one solves three in a row put extra into the intent the winner is
                         // and player 2
                     } else if (activePlayer == 0) {
-                        winnerText = "Player1";
+                        winnerText = "Player 1";
                         intent.putExtra("winnerIs", "The Winner is:");
                         intent.putExtra("winner", winnerText);
                         intent.putExtra("state", State);
@@ -113,7 +113,8 @@ public class  MainActivity extends AppCompatActivity {
                     }
 
                 }if(gameStarted == false ) {
-                        intent.putExtra("winner", "Nobody you play a draw");
+                        intent.putExtra("winnerIs", "Try again!");
+                        intent.putExtra("winner", "DRAW");
                         intent.putExtra("state", State);
                         startActivity(intent);
                         reset(view);

@@ -397,8 +397,8 @@ public class BluetoothEn extends AppCompatActivity {
                 // and player 1
                 if (State[globalTag] ==1) {
                     winnerText = "Player 1";
-                    intent.putExtra("winnerIs", "The Winner is:");
-                    intent.putExtra("winner", winnerText);
+                    intent.putExtra("winnerIs2", "The Winner is:");
+                    intent.putExtra("winner2", winnerText);
                     startActivity(intent);
                     reset(view);
 
@@ -406,8 +406,8 @@ public class BluetoothEn extends AppCompatActivity {
                     // and player 2
                 } else if (State[globalTag] ==0) {
                     winnerText = "Player 2";
-                    intent.putExtra("winnerIs", "The Winner is:");
-                    intent.putExtra("winner", winnerText);
+                    intent.putExtra("winnerIs2", "The Winner is:");
+                    intent.putExtra("winner2", winnerText);
                     startActivity(intent);
                     reset(view);
 
@@ -419,9 +419,8 @@ public class BluetoothEn extends AppCompatActivity {
                         }
 
                     }if(gameStarted == false ) {
-                        intent.putExtra("winner", "Try Again");
-                        intent.putExtra("winnerIs","DRAW");
-                        intent.putExtra("state", State);
+                        intent.putExtra("winner2", "Try Again");
+                        intent.putExtra("winnerIs2","DRAW");
                         startActivity(intent);
                         reset(view);
 

@@ -18,7 +18,8 @@ import android.widget.TextView;
  * which handles the user back to the mainactivity
  */
 public class WinningActivity extends AppCompatActivity {
-    TextView winnerView ;
+    TextView winnerText ;
+    TextView winner;
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
 
 
@@ -29,7 +30,7 @@ public class WinningActivity extends AppCompatActivity {
     public void playAgain(View view){
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
-        winnerView.setText("");
+        winnerText.setText("");
         Log.d(LOG_TAG,"Play Again!");
 
     }
@@ -46,9 +47,13 @@ public class WinningActivity extends AppCompatActivity {
 
         final int[] State = {2, 2, 2, 2, 2, 2, 2, 2, 2};
 
-        winnerView = findViewById(R.id.winnerView);
-        String winnerText = getIntent().getExtras().getString("winner");
-        winnerView.setText(winnerText);
+        winnerText = findViewById(R.id.winnerView);
+        String string = getIntent().getExtras().getString("winnerIs");
+        winnerText.setText(string);
+
+        winner = findViewById(R.id.winnerIs);
+        String string2 = getIntent().getExtras().getString("winner");
+        winner.setText(string2);
 
 
     }
