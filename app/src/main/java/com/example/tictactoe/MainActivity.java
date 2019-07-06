@@ -136,6 +136,8 @@ public class  MainActivity extends AppCompatActivity {
         ImageView image= (ImageView) view;
         activePlayer = 1;
         image.setTranslationY(-1500);
+
+
     }
 
     /**

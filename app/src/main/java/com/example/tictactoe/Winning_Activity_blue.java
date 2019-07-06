@@ -18,7 +18,8 @@ import android.widget.TextView;
  * which handles the user back to the mainactivity
  */
 public class Winning_Activity_blue extends AppCompatActivity {
-    TextView winnerView ;
+    TextView winnerText ;
+    TextView winner;
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
 
 
@@ -29,7 +30,7 @@ public class Winning_Activity_blue extends AppCompatActivity {
     public void playAgain(View view){
         Intent intent = new Intent(this, BluetoothEn.class);
         startActivity(intent);
-        winnerView.setText("");
+        winnerText.setText("");
         Log.d(LOG_TAG,"Play Again!");
 
     }
@@ -45,10 +46,14 @@ public class Winning_Activity_blue extends AppCompatActivity {
         setContentView(R.layout.activity_winning);
 
 
-        winnerView = findViewById(R.id.winnerView);
-        String winnerText = getIntent().getExtras().getString("winner");
-        winnerView.setText(winnerText);
-    }
+        winnerText = findViewById(R.id.winnerView);
+        String string = getIntent().getExtras().getString("winnerIs2");
+        winnerText.setText(string);
+
+        winner = findViewById(R.id.winnerIs);
+        String string2 = getIntent().getExtras().getString("winner2");
+        winner.setText(string2);
+}
 
 
     public void showLastState(View view){

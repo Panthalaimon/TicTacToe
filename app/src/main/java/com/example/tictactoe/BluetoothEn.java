@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Layout;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -84,7 +85,7 @@ public class BluetoothEn extends AppCompatActivity {
     BluetoothDevice[] btArray;
     ListView listView;
     TextView status;
-
+    Button playAgain;
 
     SendReceive sendReceive;
 
@@ -94,6 +95,8 @@ public class BluetoothEn extends AppCompatActivity {
 
     String DeviceMACAdress;
     private ArrayAdapter<String> mAdapter;
+
+
 
     int[] refs = {
             R.id.imageButton0,
@@ -116,7 +119,7 @@ public class BluetoothEn extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bluetooth_en);
 
-
+        playAgain =findViewById(R.id.playAgainLow);
         status = findViewById(R.id.status);
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         listen = findViewById(R.id.listenButton);
@@ -172,6 +175,7 @@ public class BluetoothEn extends AppCompatActivity {
                         break;
                     case STATE_CONNECTED:
                         status.setText("Connected");
+                        hideList();
                         break;
                     case STATE_CONNECTION_FAILED:
                         status.setText("Connection Failed");
@@ -282,6 +286,8 @@ public class BluetoothEn extends AppCompatActivity {
 
     private void implementListener() {
 
+        hideButton();
+
         showDevice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -359,6 +365,13 @@ public class BluetoothEn extends AppCompatActivity {
             }
         });
 
+        playAgain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                reset(view);
+            }
+        });
+
 
     }
 
@@ -396,20 +409,26 @@ public class BluetoothEn extends AppCompatActivity {
                 // if player one solves three in a row put extra into the intent the winner is
                 // and player 1
                 if (State[globalTag] ==1) {
-                    winnerText = "Player 1";
-                    intent.putExtra("winnerIs2", "The Winner is:");
-                    intent.putExtra("winner2", winnerText);
-                    startActivity(intent);
-                    reset(view);
+
+                    Toast.makeText(getApplicationContext(),"Winner is Player 2",Toast.LENGTH_LONG).show();
+                    showButton();
+//                    winnerText = "Player 2";
+//                    intent.putExtra("winnerIs2", "The Winner is:");
+//                    intent.putExtra("winner2", winnerText);
+//                    startActivity(intent);
+//                    reset(view);
 
                     // if player one solves three in a row put extra into the intent the winner is
                     // and player 2
                 } else if (State[globalTag] ==0) {
-                    winnerText = "Player 2";
-                    intent.putExtra("winnerIs2", "The Winner is:");
-                    intent.putExtra("winner2", winnerText);
-                    startActivity(intent);
-                    reset(view);
+                    Toast.makeText(getApplicationContext(),"Winner is Player 1",Toast.LENGTH_LONG).show();
+                    showButton();
+
+//                    winnerText = "Player 1";
+//                    intent.putExtra("winnerIs2", "The Winner is:");
+//                    intent.putExtra("winner2", winnerText);
+//                    startActivity(intent);
+//                    reset(view);
 
                 }else {
                     gameStarted = false;
@@ -419,10 +438,13 @@ public class BluetoothEn extends AppCompatActivity {
                         }
 
                     }if(gameStarted == false ) {
-                        intent.putExtra("winner2", "Try Again");
-                        intent.putExtra("winnerIs2","DRAW");
-                        startActivity(intent);
-                        reset(view);
+
+                        Toast.makeText(getApplicationContext(),"You played Draw!",Toast.LENGTH_LONG).show();
+                        showButton();
+//                        intent.putExtra("winner2", "Try Again");
+//                        intent.putExtra("winnerIs2","DRAW");
+//                        startActivity(intent);
+//                        reset(view);
 
                     }
                 }
@@ -433,6 +455,8 @@ public class BluetoothEn extends AppCompatActivity {
 
 
     }
+
+
 
     /**
      *
@@ -448,11 +472,18 @@ public class BluetoothEn extends AppCompatActivity {
      */
 
     public void reset(View view){
-        State = new int[] {2,2,2,2,2,2,2,2,2};
-        activePlayer = 1;
-        ImageView image= (ImageView) view;
-        image.setTranslationY(-1500);
-        sendReceive.cancel();
+
+
+        for(int i=0; i<9;i++){
+            State[i] =2;
+            findViewById(refs[i]).setTranslationY(-1500);
+        }
+        gameStarted =true;
+        globalTag= 2;
+        hideButton();
+
+
+       //sendReceive.cancel();
     }
 
     /**
@@ -466,6 +497,14 @@ public class BluetoothEn extends AppCompatActivity {
     protected void showList(){
         listView.setVisibility(View.VISIBLE);
 
+    }
+
+    protected void showButton(){
+        playAgain.setVisibility(View.VISIBLE);
+
+    }
+    protected void hideButton(){
+        playAgain.setVisibility(View.INVISIBLE);
     }
 
     /**
