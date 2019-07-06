@@ -12,4 +12,5 @@
     <string name="DualPlayer">Lets start on two devices</string>
     <string name="showList">show Devices</string>
     <string name="listen">listen</string>
- </resources>
+    <string name="showLast">Show Last Game State</string>
+</resources>

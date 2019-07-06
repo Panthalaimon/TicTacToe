@@ -8,6 +8,7 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -47,7 +48,7 @@ public class BluetoothEn extends AppCompatActivity {
     int activePlayer = 1;
     public static int globalTag = 2;
     public static int buttonPressed = 0;
-    private static BluetoothEn mContext;
+   private static Context mContext;
 
     private int state;
     public static final int STATE_NONE = 0;
@@ -59,7 +60,7 @@ public class BluetoothEn extends AppCompatActivity {
     public static final int STATE_CONNECTION_FAILED = 6;
     private final static int REQUEST_ENABLE_BT = 7;
     // 0: is  circle; 1: is cross; 2: is empty
-    int[] State = {2, 2, 2, 2, 2, 2, 2, 2, 2};
+    public static int[] State = {2, 2, 2, 2, 2, 2, 2, 2, 2};
 
     //winning Position
 
@@ -123,6 +124,8 @@ public class BluetoothEn extends AppCompatActivity {
         listView = findViewById(R.id.deviceList);
         implementListener();
 
+        mContext =getApplicationContext();
+
         ImageView[] position = new ImageView[9];
 
 
@@ -135,7 +138,7 @@ public class BluetoothEn extends AppCompatActivity {
                 public void onClick(View view) {
                     int a;
                     globalTag = j;
-                    String toSent;
+
                     if (State[globalTag] == 2) {
                         a = sendReceive.write(String.valueOf(globalTag).getBytes());
                         if(a>-1) {
@@ -186,34 +189,50 @@ public class BluetoothEn extends AppCompatActivity {
                             State[globalTag] = 0;
                             activePlayer =0;
                         }
-                        dropIn(findViewById(refs[globalTag]));
 
-                        // TODO check if win
+                        dropIn(findViewById(refs[globalTag]));
                         status.setText("MessageReceived!");
 
 
                         for (int[] winning : winningPos) {
-                            Intent intent = new Intent(BluetoothEn.this, WinningActivity.class);
+                            Intent intent = new Intent(BluetoothEn.this, Winning_Activity_blue.class);
                             if (State[winning[0]] == State[winning[1]] && State[winning[1]] == State[winning[2]] && State[winning[0]] != 2) {
                                 String winnerText = "";
                                 gameStarted = false;
                                 // if player one solves three in a row put extra into the intent the winner is
                                 // and player 1
                                 if (activePlayer ==1) {
-                                    winnerText = "Player2";
-                                    intent.putExtra("winnerIs", "The Winner is:");
-                                    intent.putExtra("winner", winnerText);
-                                    reset();
-
-                                    // if player one solves three in a row put extra into the intent the winner is
-                                    // and player 2
-                                } else if (activePlayer ==2) {
-                                    winnerText = "Player1";
+                                    winnerText = "Player 2";
                                     intent.putExtra("winnerIs", "The Winner is:");
                                     intent.putExtra("winner", winnerText);
                                     startActivity(intent);
-                                    reset();
+                                    //reset();
 
+                                    // if player one solves three in a row put extra into the intent the winner is
+                                    // and player 2
+                                } else if (activePlayer ==0) {
+                                    winnerText = "Player 1";
+                                    intent.putExtra("winnerIs", "The Winner is:");
+                                    intent.putExtra("winner", winnerText);
+                                    startActivity(intent);
+
+                                   // reset();
+
+                                }else {
+
+                                    gameStarted = false;
+                                    for(int counterState :State)
+                                    {
+                                        if(counterState == 2)
+                                        {
+                                            gameStarted = true;}
+
+                                    }if(!(gameStarted)  ) {
+                                        winnerText = "TRY AGAIN! ";
+                                        intent.putExtra("winnerIs", "DRAW");
+                                        intent.putExtra("winner", winnerText);
+                                        startActivity(intent);
+                                    }
                                 }
 
                             }
@@ -294,10 +313,13 @@ public class BluetoothEn extends AppCompatActivity {
                     }
                     if (buttonPressed == 0) {
                         hideList();
+
+
+
                     }
                 }else{
-
-                    Toast.makeText(getApplicationContext(),"You must enable Bluetooth on your device!",Toast.LENGTH_LONG).show();
+                    bluetoothAdapter.enable();
+                    Toast.makeText(getApplicationContext(),"activate bluetooth press second time show device button!",Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -305,14 +327,24 @@ public class BluetoothEn extends AppCompatActivity {
         listen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(bluetoothAdapter.isEnabled()){
-                serverClass = new ServerClass(handler, bluetoothAdapter, getApplicationContext());
-                serverClass.start();
-                sendReceive = serverClass.getSendReceive();
-                }else{
-                    Toast.makeText(getApplicationContext(),"You must enable Bluetooth on your device!",Toast.LENGTH_LONG).show();
-                }
+                if (bluetoothAdapter.isEnabled()) {
+                    if (buttonPressed == 0) {
+                        buttonPressed = 1;
 
+                    } else {
+                        buttonPressed = 0;
+
+                    }
+                    if (buttonPressed == 1) {
+                        serverClass = new ServerClass(handler, bluetoothAdapter, getApplicationContext());
+                        serverClass.start();
+                        sendReceive = serverClass.getSendReceive();
+                    } else {
+
+                       Toast.makeText(getApplicationContext(),"You must enable Bluetooth on your device!",Toast.LENGTH_LONG).show();
+                    }
+
+                }
             }
         });
 
@@ -356,7 +388,49 @@ public class BluetoothEn extends AppCompatActivity {
 
             image.animate().translationYBy(1500).setDuration(300);
 
-            //isWinner(State);
+        for (int[] winning : winningPos) {
+            Intent intent = new Intent(BluetoothEn.this, Winning_Activity_blue.class);
+            if (State[winning[0]] == State[winning[1]] && State[winning[1]] == State[winning[2]] && State[winning[0]] != 2) {
+                String winnerText = "";
+                gameStarted = false;
+                // if player one solves three in a row put extra into the intent the winner is
+                // and player 1
+                if (activePlayer ==1) {
+                    winnerText = "Player 1";
+                    intent.putExtra("winnerIs", "The Winner is:");
+                    intent.putExtra("winner", winnerText);
+                    startActivity(intent);
+                    //reset();
+
+                    // if player one solves three in a row put extra into the intent the winner is
+                    // and player 2
+                } else if (activePlayer ==0) {
+                    winnerText = "Player 2";
+                    intent.putExtra("winnerIs", "The Winner is:");
+                    intent.putExtra("winner", winnerText);
+                    startActivity(intent);
+                    //reset();
+
+                }else {
+
+                    gameStarted = false;
+                    for(int counterState :State)
+                    {
+                        if(counterState == 2)
+                        {
+                            gameStarted = true;}
+
+                    }if(!(gameStarted) ) {
+                        winnerText = "TRY AGAIN! ";
+                        intent.putExtra("winnerIs", "DRAW");
+                        intent.putExtra("winner", winnerText);
+                        startActivity(intent);
+                    }
+                }
+
+            }
+
+        }
 
 
     }
@@ -369,26 +443,15 @@ public class BluetoothEn extends AppCompatActivity {
      * @return
      */
 
-    public int[] stringToIntegerArray(String s){
-        int size = s.length();
-        int[] intArray = new int[size];
-
-        for(int i=1; i<size;i++){
-            intArray[i] = Integer.parseInt(String.valueOf(s.charAt(i)));
-        }
-
-        return intArray;
-    }
-
     /**
      * to reset game after changing to the winner class
      *
      */
 
     public void reset(){
-        State = new  int []{2,2,2,2,2,2,2,2,2};
+        State = new int[] {2,2,2,2,2,2,2,2,2};
         activePlayer = 1;
-        for(int i=0;i<9;i++) {
+        for(int i=0;i<10;i++) {
             findViewById(refs[i]).setTranslationY(-1500);
         }
     }
@@ -420,20 +483,8 @@ public class BluetoothEn extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-
-        if(BluetoothServer.isAlive()){
-            BluetoothServer.cancel();
-        }
-        if(BluetoothClient.isAlive()){
-            //BluetoothClient.cancel();
-        }
-        if(bluetoothAdapter.isEnabled()){
-            bluetoothAdapter.disable();
-        }
-
-
         startActivity(new Intent(BluetoothEn.this, StartActivity.class));
-        BluetoothEn.this.finish();
+
     }
 
 
@@ -441,19 +492,21 @@ public class BluetoothEn extends AppCompatActivity {
     /**
      * free the bluetooth and client socket
      */
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if(BluetoothServer.isAlive()){
-            BluetoothServer.cancel();
-        }
-        if(BluetoothClient.isAlive()){
-            //BluetoothClient.cancel();
-        }
 
-    }
-    public static BluetoothEn getContext() {
+
+    public static Context getContext() {
         return mContext;
     }
+
+ public boolean testState(int[] mState) {
+     boolean state = false;
+        for (int i = 0; i < 9; i++) {
+            if (State[i] == 2) {
+                state = false;
+            } else {
+                state = true;
+            }
+        }return state;
+ }
 
 }

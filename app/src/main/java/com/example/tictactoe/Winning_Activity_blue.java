@@ -17,7 +17,7 @@ import android.widget.TextView;
  * WinningActivity just show the winner or draw and a play again button
  * which handles the user back to the mainactivity
  */
-public class WinningActivity extends AppCompatActivity {
+public class Winning_Activity_blue extends AppCompatActivity {
     TextView winnerView ;
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
 
@@ -27,7 +27,7 @@ public class WinningActivity extends AppCompatActivity {
      * @param view
      */
     public void playAgain(View view){
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, BluetoothEn.class);
         startActivity(intent);
         winnerView.setText("");
         Log.d(LOG_TAG,"Play Again!");
@@ -44,17 +44,14 @@ public class WinningActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_winning);
 
-        final int[] State = {2, 2, 2, 2, 2, 2, 2, 2, 2};
 
         winnerView = findViewById(R.id.winnerView);
         String winnerText = getIntent().getExtras().getString("winner");
         winnerView.setText(winnerText);
-
-
     }
+
 
     public void showLastState(View view){
         onBackPressed();
     }
-
 }

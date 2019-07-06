@@ -4,23 +4,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".WinningActivity">
-
+    tools:context=".Winning_Activity_blue">
     <Button
-        android:id="@+id/playAgainbutton"
+        android:id="@+id/playAgainbutton2"
         android:layout_width="265dp"
         android:layout_height="113dp"
-        android:layout_marginTop="264dp"
+        android:layout_marginTop="288dp"
         android:onClick="playAgain"
         android:text="@string/playAgain"
         android:textSize="36sp"
         app:layout_constraintEnd_toEndOf="@+id/winnerView"
-        app:layout_constraintHorizontal_bias="0.489"
+        app:layout_constraintHorizontal_bias="0.509"
         app:layout_constraintStart_toStartOf="@+id/winnerView"
         app:layout_constraintTop_toBottomOf="@+id/winnerIs" />
 
     <TextView
-        android:id="@+id/winnerIs"
+        android:id="@+id/winnerIs2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -28,7 +27,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:text="@string/winnerIs"
-        android:textSize="56dp"
+        android:textSize="56sp"
         android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -38,7 +37,7 @@
         app:layout_constraintVertical_bias="0.173" />
 
     <TextView
-        android:id="@+id/winnerView"
+        android:id="@+id/winnerView2"
         android:layout_width="314dp"
         android:layout_height="176dp"
         android:layout_marginStart="8dp"
@@ -46,14 +45,13 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:gravity="center"
-        android:textSize="56dp"
-        app:layout_constraintBottom_toTopOf="@+id/playAgainbutton"
+        android:textSize="56sp"
+        app:layout_constraintBottom_toTopOf="@+id/playAgainbutton2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/winnerIs" />
-
+        app:layout_constraintTop_toBottomOf="@+id/winnerIs2" />
     <Button
-        android:id="@+id/showLastGame"
+        android:id="@+id/showLastGame2"
         android:layout_width="265dp"
         android:layout_height="113dp"
         android:layout_marginTop="8dp"
@@ -62,8 +60,8 @@
         android:text="@string/showLast"
         android:textSize="36sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/playAgainbutton"
+        app:layout_constraintEnd_toEndOf="@+id/playAgainbutton2"
         app:layout_constraintHorizontal_bias="0.489"
-        app:layout_constraintStart_toStartOf="@+id/playAgainbutton"
-        app:layout_constraintTop_toBottomOf="@+id/playAgainbutton" />
+        app:layout_constraintStart_toStartOf="@+id/playAgainbutton2"
+        app:layout_constraintTop_toBottomOf="@+id/playAgainbutton2" />
 </androidx.constraintlayout.widget.ConstraintLayout>

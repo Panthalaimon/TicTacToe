@@ -25,31 +25,16 @@ public class ClientClass extends Thread {
         setName("ConnectThread");
         bluetoothAdapter.cancelDiscovery();
 
-//            try{
-//                socket.connect();
-//                Message message = Message.obtain();
-//                message.what = STATE_CONNECTED;
-//                handler.sendMessage(message);
+
 
         sendReceive = new SendReceive(device, handler);
         sendReceive.start();
 
-//            }catch(IOException e){
-//                connectionFailed();
-//            }
 
     }
     public SendReceive getSendReceive() {
         while (sendReceive == null);
         return sendReceive;
     }
-//
-//        public void cancel(){
-//            try{
-//                socket.close();
-//            }catch(IOException e){
-//                Log.e(TAG, "close() of connect socket failed", e);
-//            }
-//        }
 
 }

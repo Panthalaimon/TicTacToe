@@ -28,7 +28,7 @@ public class ServerClass extends Thread {
             BluetoothServerSocket tmp = null;
             try {
                 tmp = bluetoothAdapter.listenUsingRfcommWithServiceRecord(app_name, uuid);
-                Toast.makeText(context,"ServerSocket Class constructor Successful!", Toast.LENGTH_LONG).show();
+                Toast.makeText(context,"Waiting for other device to bind....", Toast.LENGTH_LONG).show();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -40,26 +40,10 @@ public class ServerClass extends Thread {
         public void run() {
             BluetoothSocket socket = null;
             while (socket == null) {
-//                try
-//                {
 
                 Message message = Message.obtain();
                 message.what = STATE_CONNECTING;
                 handler.sendMessage(message);
-
-//                    socket = serverSocket.accept();
-//                }catch (IOException e)
-//                {
-//                    e.printStackTrace();
-//                    Message message = Message.obtain();
-//                    message.what=STATE_CONNECTION_FAILED;
-//                    handler.sendMessage(message);
-//                }
-
-//                if(socket != null){
-
-
-//                    Toast.makeText(getApplicationContext(),"sending to manage connected socket Successful!",Toast.LENGTH_LONG).show();
 
                 sendReceive = new SendReceive(serverSocket, handler);
                 sendReceive.start();
@@ -72,7 +56,7 @@ public class ServerClass extends Thread {
         while (sendReceive == null);
         return sendReceive;
     }
-//        }
+
 
         public void cancel() {
             try {

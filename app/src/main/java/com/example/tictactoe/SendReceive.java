@@ -1,5 +1,6 @@
 package com.example.tictactoe;
 
+import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
@@ -7,15 +8,20 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.UUID;
+import java.util.zip.CheckedOutputStream;
 
 import static com.example.tictactoe.BluetoothEn.STATE_CONNECTED;
 import static com.example.tictactoe.BluetoothEn.STATE_MESSAGE_RECEIVED;
+import static com.example.tictactoe.BluetoothEn.globalTag;
 
 public class SendReceive extends Thread {
     BluetoothSocket bluetoothSocket;
@@ -31,7 +37,22 @@ public class SendReceive extends Thread {
     boolean gameStarted = true;
     int activePlayer = 1;
     Context context;
+    Activity activity;
+    ImageView[] position = new ImageView[9];
 
+
+    int[] refs = {
+            R.id.imageButton0,
+            R.id.imageButton1,
+            R.id.imageButton2,
+            R.id.imageButton3,
+            R.id.imageButton4,
+            R.id.imageButton5,
+            R.id.imageButton6,
+            R.id.imageButton7,
+            R.id.imageButton8,
+
+    };
     public SendReceive(BluetoothDevice device, Handler handler) {
         this.handler = handler;
         bluetoothDevice = device;
@@ -96,38 +117,13 @@ public class SendReceive extends Thread {
         }
     }
 
+
     public int write(byte[] bytes) {
-        context =BluetoothEn.getContext();
-        Intent myIntent = new Intent(context.getApplicationContext(), WinningActivity.class);
-        for (int[] winning : winningPos) {
-            if (State[winning[0]] == State[winning[1]] && State[winning[1]] == State[winning[2]] && State[winning[0]] != 2) {
-                String winnerText = "";
-                gameStarted = false;
-                // if player one solves three in a row put extra into the intent the winner is
-                // and player 1
-                if (activePlayer ==1) {
-                    winnerText = "Player2";
-                    myIntent.putExtra("winnerIs", "The Winner is:");
-                    myIntent.putExtra("winner", winnerText);
-                    context.startActivity(myIntent);
-                    // if player one solves three in a row put extra into the intent the winner is
-                    // and player 2
-                } else if (activePlayer ==2) {
-                    winnerText = "Player1";
-                    myIntent.putExtra("winnerIs", "The Winner is:");
-                    myIntent.putExtra("winner", winnerText);
-                    context.startActivity(myIntent);
-                }
-            }
 
-
-
-        }
         if (token) {
             try {
                 outStream.write(bytes);
                 token =false;
-
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -135,6 +131,7 @@ public class SendReceive extends Thread {
 
             if (bluetoothServerSocket != null) {
                 return 0;
+
             } else return 1;
         }return -1;
     }

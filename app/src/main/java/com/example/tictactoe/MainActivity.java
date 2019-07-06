@@ -81,6 +81,7 @@ public class  MainActivity extends AppCompatActivity {
                         winnerText = "Player2";
                         intent.putExtra("winnerIs", "The Winner is:");
                         intent.putExtra("winner", winnerText);
+                        intent.putExtra("state", State);
 
                         // if player one solves three in a row put extra into the intent the winner is
                         // and player 2
@@ -88,11 +89,12 @@ public class  MainActivity extends AppCompatActivity {
                         winnerText = "Player1";
                         intent.putExtra("winnerIs", "The Winner is:");
                         intent.putExtra("winner", winnerText);
+                        intent.putExtra("state", State);
 
                     }
 
                     startActivity(intent);
-                    reset(view);
+                    //reset(view);
 
                     // TODO if the last try is completed to three in a row there will be
                     // TODO also draw
@@ -109,8 +111,9 @@ public class  MainActivity extends AppCompatActivity {
                     }if(!(gameStarted))
                     {
                         intent.putExtra("winner", "Nobody you play a draw");
+                        intent.putExtra("state", State);
                         startActivity(intent);
-                        reset(view);
+                        //reset(view);
                     }
 
                     }
@@ -142,11 +145,12 @@ private Toolbar toolbar;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-
-
-
     }
 
+    @Override
+    public void onBackPressed(){
+        Intent intent = new Intent(this, StartActivity.class);
+        startActivity(intent);
+    }
 
 }
