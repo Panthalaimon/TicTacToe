@@ -39,6 +39,7 @@ import java.util.UUID;
 /**
  * @author Steffen Hanzlik
  * Matriculation number: 1207417
+ * https://github.com/Panthalaimon/TicTacToe.git
  * ==========================================================================
  * Bluetooth_Enable_Activity
  */

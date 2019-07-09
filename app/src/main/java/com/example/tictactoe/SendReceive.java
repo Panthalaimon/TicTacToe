@@ -27,6 +27,7 @@ import static com.example.tictactoe.BluetoothEn.globalTag;
 /**
  * @author Steffen Hanzlik
  * Matriculation number: 1207417
+ * https://github.com/Panthalaimon/TicTacToe.git
  * ==========================================================================
  * SendReceive Class
  */

@@ -13,6 +13,7 @@ import android.widget.TextView;
 /**
  * @author Steffen Hanzlik
  * Matriclation number: 1207417
+ * https://github.com/Panthalaimon/TicTacToe.git
  *
  * WinningActivity just show the winner or draw and a play again button
  * which handles the user back to the mainactivity

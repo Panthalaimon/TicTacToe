@@ -17,6 +17,7 @@ import android.widget.Toolbar;
  * @author Steffen Hanzlik
  * Matriculation Number: 1207417
  * MainActivity
+ * https://github.com/Panthalaimon/TicTacToe.git
  */
 public class  MainActivity extends AppCompatActivity {
 

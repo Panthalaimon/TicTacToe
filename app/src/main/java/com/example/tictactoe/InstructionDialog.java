@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 /**
  * @author Steffen Hanzlik
  * Matriculation number: 1207417
+ * https://github.com/Panthalaimon/TicTacToe.git
  * ==========================================================================
  * Instruction Dialog Alert Screen
  */

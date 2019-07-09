@@ -26,6 +26,7 @@ import java.net.Socket;
 /**
  * @author Steffen Hanzlik
  * Matriculation number: 1207417
+ * https://github.com/Panthalaimon/TicTacToe.git
  *
  * Start activity just for chooseing the one Device mode
  * or two device mode
