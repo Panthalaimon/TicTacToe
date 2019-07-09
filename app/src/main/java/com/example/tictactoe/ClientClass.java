@@ -5,7 +5,12 @@ import android.bluetooth.BluetoothDevice;
 import android.util.Log;
 
 import android.os.Handler;
-
+/**
+ * @author Steffen Hanzlik
+ * Matriculation number: 1207417
+ * ==========================================================================
+ * Client Class
+ */
 public class ClientClass extends Thread {
 
     private static final String TAG = "BluetoothGameService";

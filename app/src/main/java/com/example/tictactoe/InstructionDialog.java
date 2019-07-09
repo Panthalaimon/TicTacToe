@@ -7,6 +7,12 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatDialogFragment;
 
+/**
+ * @author Steffen Hanzlik
+ * Matriculation number: 1207417
+ * ==========================================================================
+ * Instruction Dialog Alert Screen
+ */
 public class InstructionDialog extends AppCompatDialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState){

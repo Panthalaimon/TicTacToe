@@ -24,6 +24,12 @@ import static com.example.tictactoe.BluetoothEn.STATE_CONNECTED;
 import static com.example.tictactoe.BluetoothEn.STATE_MESSAGE_RECEIVED;
 import static com.example.tictactoe.BluetoothEn.globalTag;
 
+/**
+ * @author Steffen Hanzlik
+ * Matriculation number: 1207417
+ * ==========================================================================
+ * SendReceive Class
+ */
 public class SendReceive extends Thread {
     BluetoothSocket bluetoothSocket;
     BluetoothDevice bluetoothDevice;

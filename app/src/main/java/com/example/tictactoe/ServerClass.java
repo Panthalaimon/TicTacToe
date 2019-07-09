@@ -11,7 +11,12 @@ import android.widget.Toast;
 import java.util.UUID;
 
 import static com.example.tictactoe.BluetoothEn.STATE_CONNECTING;
-
+/**
+ * @author Steffen Hanzlik
+ * Matriculation number: 1207417
+ * ==========================================================================
+ * Server Class
+ */
 public class ServerClass extends Thread {
         private final BluetoothServerSocket serverSocket;
         BluetoothAdapter bluetoothAdapter;

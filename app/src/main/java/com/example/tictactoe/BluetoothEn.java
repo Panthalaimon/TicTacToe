@@ -343,57 +343,6 @@ public class BluetoothEn extends AppCompatActivity {
 
             image.animate().translationYBy(1500).setDuration(300);
 
-//        for (int[] winning : winningPos) {
-//            Intent intent = new Intent(BluetoothEn.this, Winning_Activity_blue.class);
-//            if (State[winning[0]] == State[winning[1]] && State[winning[1]] == State[winning[2]] && State[winning[0]] != 2) {
-//                String winnerText = "";
-//                gameStarted = false;
-//                // if player one solves three in a row put extra into the intent the winner is
-//                // and player 1
-//                if (State[globalTag] ==1) {
-//
-////                    Toast.makeText(getApplicationContext(),"Winner is Player 2",Toast.LENGTH_LONG).show();
-////                    showButton();
-//                    winnerText = "Player 2";
-//                    intent.putExtra("winnerIs2", "The Winner is:");
-//                    intent.putExtra("winner2", winnerText);
-//                    startActivity(intent);
-//                    //reset(view);
-//
-//                    // if player one solves three in a row put extra into the intent the winner is
-//                    // and player 2
-//                } else if (State[globalTag] ==0) {
-////                    Toast.makeText(getApplicationContext(),"Winner is Player 1",Toast.LENGTH_LONG).show();
-////                    showButton();
-//
-//                    winnerText = "Player 1";
-//                    intent.putExtra("winnerIs2", "The Winner is:");
-//                    intent.putExtra("winner2", winnerText);
-//                    startActivity(intent);
-//                    //reset(view);
-//
-//                }else {
-//                    gameStarted = false;
-//                    for(int counterState :State) {
-//                        if (counterState == 2) {
-//                            gameStarted = true;
-//                        }
-//
-//                    }if(gameStarted == false ) {
-//
-////                        Toast.makeText(getApplicationContext(),"You played Draw!",Toast.LENGTH_LONG).show();
-////                        showButton();
-//                        intent.putExtra("winner2", "Try Again");
-//                        intent.putExtra("winnerIs2","DRAW");
-//                        startActivity(intent);
-//                      //  reset(view);
-//
-//                    }
-//                }
-//
-//            }
-//
-//        }
 
         for(int[] winning:winningPos) {
             boolean winnerTextShow =false;

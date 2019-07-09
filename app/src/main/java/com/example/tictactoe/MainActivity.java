@@ -69,10 +69,11 @@ public class  MainActivity extends AppCompatActivity {
             /**
              * if one of the winningpositions is correct  look which player solved three in a row
              */
-
+int tmp=0;
+            Intent intent = new Intent(MainActivity.this, WinningActivity.class);
             for(int[] winning:winningPos) {
                 boolean winnerTextShow =false;
-                Intent intent = new Intent(MainActivity.this, WinningActivity.class);
+
                 if (State[winning[0]] == State[winning[1]] && State[winning[1]] == State[winning[2]] && State[winning[0]] != 2) {
                     String winnerText = "";
 
@@ -110,14 +111,16 @@ public class  MainActivity extends AppCompatActivity {
                     // draw doesnt work in the moment
 
 
-                }else{
-                    gameStarted = false;
+                }
+            }
+            if (testState(State)){
+
                 for(int counterState :State) {
                     if (counterState == 2) {
                         gameStarted = true;
-                    }
+                    }else gameStarted =false;
 
-                }if(gameStarted == false ) {
+                }if(testState(State)) {
                         intent.putExtra("winnerIs", "Try again!");
                         intent.putExtra("winner", "DRAW");
                         intent.putExtra("state", State);
@@ -127,7 +130,7 @@ public class  MainActivity extends AppCompatActivity {
 
                     }
                 }
-            }
+
         }
     }
 
@@ -167,10 +170,13 @@ private Toolbar toolbar;
 
     public boolean testState(int[] mState) {
         boolean state = true;
+        int tmp = 0;
         for (int i = 0; i < 9; i++) {
-            if (State[i] != 2) {
+            if (State[i] == 2) {
                 state = false;
             }
+
+
         }
         return state;
     }
