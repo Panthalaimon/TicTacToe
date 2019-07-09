@@ -478,13 +478,12 @@ public class BluetoothEn extends AppCompatActivity {
     }
 
 
-
     /**
-     * free the bluetooth and client socket
+     * for testing gamestate and activate draw activtity
+     *
+     * @param mState
+     * @return
      */
-
-
-
     public boolean testState(int[] mState) {
         boolean state = true;
         int tmp = 0;
