@@ -343,10 +343,10 @@ public class BluetoothEn extends AppCompatActivity {
 
             image.animate().translationYBy(1500).setDuration(300);
 
-
+        Intent intent = new Intent(BluetoothEn.this, WinningActivity.class);
         for(int[] winning:winningPos) {
             boolean winnerTextShow =false;
-            Intent intent = new Intent(BluetoothEn.this, WinningActivity.class);
+
             if (State[winning[0]] == State[winning[1]] && State[winning[1]] == State[winning[2]] && State[winning[0]] != 2) {
                 String winnerText = "";
 
@@ -384,22 +384,23 @@ public class BluetoothEn extends AppCompatActivity {
                 // draw doesnt work in the moment
 
 
-            }else{
-                gameStarted = false;
-                for(int counterState :State) {
-                    if (counterState == 2) {
-                        gameStarted = true;
-                    }
+            }
+        }
+        if (testState(State)){
 
-                }if(gameStarted == false ) {
-                    intent.putExtra("winnerIs", "Try again!");
-                    intent.putExtra("winner", "DRAW");
-                    intent.putExtra("state", State);
-                    startActivity(intent);
+            for(int counterState :State) {
+                if (counterState == 2) {
+                    gameStarted = true;
+                }else gameStarted =false;
+
+            }if(testState(State)) {
+                intent.putExtra("winnerIs", "Try again!");
+                intent.putExtra("winner", "DRAW");
+                intent.putExtra("state", State);
+                startActivity(intent);
 
 
 
-                }
             }
         }
     }
@@ -484,15 +485,17 @@ public class BluetoothEn extends AppCompatActivity {
 
 
 
- public boolean testState(int[] mState) {
-     boolean state = false;
+    public boolean testState(int[] mState) {
+        boolean state = true;
+        int tmp = 0;
         for (int i = 0; i < 9; i++) {
             if (State[i] == 2) {
                 state = false;
-            } else {
-                state = true;
             }
-        }return state;
- }
+
+
+        }
+        return state;
+    }
 
 }
