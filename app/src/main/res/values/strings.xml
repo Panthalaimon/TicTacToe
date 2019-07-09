@@ -3,7 +3,7 @@
     <string name="playAgain">Play Again !</string>
     <string name="tryAgain">Try Again !</string>
     <string name="winnerIs">The Winner is: </string>
-    <string name="startGameSingle">Lets start on this device!!!</string>
+    <string name="startGameSingle">Lets start on this device</string>
     <string name="startGameDual">Lets start Dual Player mode</string>
     <string name="Welcome">Welcome to TicTacToe </string>
     <string name="BluetoothOn">Enable Bluetooth</string>
@@ -13,4 +13,8 @@
     <string name="showList">show Devices</string>
     <string name="listen">listen</string>
     <string name="showLast">Show Last Game State</string>
+    <string name="about">About</string>
+    <string name="Instruction">Instruction</string>
+    <string name="AboutText">Test About</string>
+    <string name="InstructionText">Test Instruction</string>
 </resources>

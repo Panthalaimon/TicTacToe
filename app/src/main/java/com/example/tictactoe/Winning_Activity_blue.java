@@ -28,7 +28,7 @@ public class Winning_Activity_blue extends AppCompatActivity {
      * @param view
      */
     public void playAgain(View view){
-        Intent intent = new Intent(this, BluetoothEn.class);
+        Intent intent = new Intent(this, StartActivity.class);
         startActivity(intent);
         winnerText.setText("");
         Log.d(LOG_TAG,"Play Again!");
